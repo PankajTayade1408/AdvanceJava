@@ -12,14 +12,16 @@ public class EmployeeModel {
    private  String dateOfJoining;
    private String email;
    
-public EmployeeModel(int id, String firstName, String lastName, String age, String salary, String dateOfJoining) {
+public EmployeeModel(int id, String firstName, String lastName, String age, String salary, String dateOfJoining,
+		String email) {
 	super();
 	this.id = id;
 	this.firstName = firstName;
-	this.lastName = lastName;                        
+	this.lastName = lastName;
 	this.age = age;
 	this.salary = salary;
 	this.dateOfJoining = dateOfJoining;
+	this.email = email;
 }
 
 public EmployeeModel(int id, LinkedHashSet<String> skills) {
@@ -28,18 +30,18 @@ public EmployeeModel(int id, LinkedHashSet<String> skills) {
 	this.skills = skills;
 }
 
-public EmployeeModel(String firstName, String lastName, String age, String salary,
-		String dateOfJoining) {
+public EmployeeModel(String firstName, String lastName, String age, String salary, String dateOfJoining, String email) {
 	super();
 	this.firstName = firstName;
 	this.lastName = lastName;
 	this.age = age;
 	this.salary = salary;
 	this.dateOfJoining = dateOfJoining;
+	this.email = email;
 }
 
 public EmployeeModel(int id, String firstName, String lastName, LinkedHashSet<String> skills, String age, String salary,
-		String dateOfJoining) {
+		String dateOfJoining, String email) {
 	super();
 	this.id = id;
 	this.firstName = firstName;
@@ -48,6 +50,7 @@ public EmployeeModel(int id, String firstName, String lastName, LinkedHashSet<St
 	this.age = age;
 	this.salary = salary;
 	this.dateOfJoining = dateOfJoining;
+	this.email = email;
 }
 
 public EmployeeModel() {
@@ -116,6 +119,7 @@ public String getEmail() {
 public void setEmail(String email) {
 	this.email = email;
 }
+
 }
    
   
