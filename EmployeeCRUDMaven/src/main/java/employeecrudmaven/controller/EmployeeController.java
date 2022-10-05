@@ -82,7 +82,8 @@ public class EmployeeController extends HttpServlet {
 		String age = request.getParameter("empage");
 		String salary = request.getParameter("empsalary");
 		String dateOfJoining = request.getParameter("empdoj");
-		EmployeeModel employee = new EmployeeModel(firstName, lastName,age, salary, dateOfJoining);
+		String email=request.getParameter("empemail");
+		EmployeeModel employee = new EmployeeModel(firstName, lastName,age, salary, dateOfJoining,email);
 		employeeService.insertEmployee(employee);
 		employeeService.insertEmployeeSkillsById(employee.getId(), skills);
 		response.sendRedirect("empList");
@@ -127,7 +128,8 @@ public class EmployeeController extends HttpServlet {
 		String age = request.getParameter("empage");
 		String salary = request.getParameter("empsalary");
 		String dateOfJoining = request.getParameter("empdoj");
-		EmployeeModel employee = new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining);
+		String email=request.getParameter("empemail");
+		EmployeeModel employee = new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining,email);
 		employeeService.updateEmployee(employee);
 		EmployeeModel empskills = new EmployeeModel(id, skills);
 		employeeService.updateEmployeeSkills(empskills);

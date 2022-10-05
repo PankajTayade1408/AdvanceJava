@@ -58,7 +58,9 @@
 		<br /> Enter the Employee's Date of Joining : <input type="date"
 			name="empdoj" value="${employee.getDoj()}"
 			max=<%=java.time.LocalDate.now()%> required /><br />
-		<br /> <input type="submit" name="submit" value="Submit" id="submit"
+		<br/>  Enter the E-mail : <input type="email" name="empemail" 
+			value="${employee.getEmail()}" max="254">	
+		<br /> <br/><input type="submit" name="submit" value="Submit" id="submit"
 			required /> <input type="reset" name="reset" value="Reset" id="reset"
 			required /> &nbsp;&nbsp;&nbsp;&nbsp; <a
 			href="<%=request.getContextPath()%>/"><button type="button">List</button></a>

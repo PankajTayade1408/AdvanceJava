@@ -1,11 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@page import="employeecrudmaven.model.EmployeeModel.*"%>
+<%@ 
+page import="employeecrudmaven.model.EmployeeModel.*"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-<!DOCTYPE html>
 <html>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <body>
 	<h1>
 		<a href="<%=request.getContextPath()%>/new">Add Employee Detail's</a>
@@ -22,6 +20,7 @@
 			<th>Age</th>
 			<th>Salary</th>
 			<th>Date of Joining</th>
+			<th>E-Mail</th>
 			<th>Update</th>
 			<th>Delete</th>
 		</tr>
@@ -42,6 +41,7 @@
 				<td>${e.getAge()}</td>
 				<td>${e.getSalary()}</td>
 				<td>${e.getDoj()}</td>
+				<td>${e.getEmail()}</td>
 				<td><a
 					 href="<%=request.getContextPath()%>/edit?id=${e.getId()}">Edit</a></td>
 				<td><a
