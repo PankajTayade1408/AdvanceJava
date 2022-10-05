@@ -30,7 +30,7 @@ public interface EmployeeDAO {
 	public static final String SELECT_EMPLOYEE_SKILL_BY_ID_SQL = "select * from employee_skills where empid=?"; //
 	
 	public static final String SELECT_ALL_EMPLOYEE_SKILLS_SQL="select * from employee_skills";
-	//Pankaj
+	
 	// Methods for Employee1 Table
 	public void insertEmployee(EmployeeModel employee);
 
