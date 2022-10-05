@@ -185,7 +185,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		EmployeeModel employee = new EmployeeModel();
 		int id =0;
 		LinkedHashSet<String> skills = new LinkedHashSet<String>();
-		EmployeeDAOImpl employeeDAOImpl = new EmployeeDAOImpl();
+		EmployeeDAO employeeDAOImpl = new EmployeeDAOImpl();
 		employeeDAOImpl.insertEmployee(employee);
 		employeeDAOImpl.getEmployeeById(id);
 		employeeDAOImpl.getAllEmployee();
