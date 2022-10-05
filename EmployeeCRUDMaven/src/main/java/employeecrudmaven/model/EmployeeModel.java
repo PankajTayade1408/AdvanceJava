@@ -10,6 +10,7 @@ public class EmployeeModel {
    private String age;
    private String salary;
    private  String dateOfJoining;
+   private String email;
    
 public EmployeeModel(int id, String firstName, String lastName, String age, String salary, String dateOfJoining) {
 	super();
@@ -106,6 +107,14 @@ public String getDoj() {
 
 public void setDateOfJoining(String dateOfJoining) {
 	this.dateOfJoining = dateOfJoining;
+}
+
+public String getEmail() {
+	return email;
+}
+
+public void setEmail(String email) {
+	this.email = email;
 }
 }
    
