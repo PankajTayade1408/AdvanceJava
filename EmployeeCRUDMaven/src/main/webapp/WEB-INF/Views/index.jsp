@@ -2,7 +2,6 @@
 	pageEncoding="ISO-8859-1"%>
 <%@page import="employeecrudmaven.model.EmployeeModel.*"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
 <html>
 <body>
 	<h1>
