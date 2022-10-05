@@ -3,9 +3,7 @@
 <%@page import="employeecrudmaven.model.EmployeeModel.*"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<!DOCTYPE html>
 <html>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <body>
 	<h1>
 		<a href="<%=request.getContextPath()%>/new">Add Employee Detail's</a>
