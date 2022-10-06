@@ -32,16 +32,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	public boolean updateEmployee(EmployeeModel employee) {
-		String email=employee.getEmail();
-		ArrayList<String> emailList=EmployeeDAOImpl.selectAllEmployeeEmail();
-		if(emailList.contains(email))
-		{
-			System.out.println("Email Already Exists.. Please Enter new email ");
-		}
-		else
-		{
-		return employeeDAO.updateEmployee(employee);
-		}
 		return employeeDAO.updateEmployee(employee);
 	}
 
