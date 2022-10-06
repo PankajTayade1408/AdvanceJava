@@ -29,23 +29,24 @@ page import="employeecrudmaven.model.EmployeeModel.*"%>
 		%>
 		<c:forEach items="${empList}" var="e">		
 			<tr>
-				<td>
+				<td><center>
 				<%
 					count += 1;
 					out.print(count);
 				%>
+				</center>
 				</td>
-				<td>${e.getFirstname()}</td>
-				<td>${e.getLastname()}</td>
-				<td>${e.getSkills()}</td>
-				<td>${e.getAge()}</td>
-				<td>${e.getSalary()}</td>
-				<td>${e.getDoj()}</td>
-				<td>${e.getEmail()}</td>
+				<td><center>${e.getFirstname()}</center></td>
+				<td><center>${e.getLastname()}</center></td>
+				<td><center>${e.getSkills()}</center></td>
+				<td><center>${e.getAge()}</center></td>
+				<td><center>${e.getSalary()}</center></td>
+				<td><center>${e.getDoj()}</center></td>
+				<td><center>${e.getEmail()}</center></td>
 				<td><a
-					 href="<%=request.getContextPath()%>/edit?id=${e.getId()}">Edit</a></td>
+					 href="<%=request.getContextPath()%>/edit?id=${e.getId()}"><center>Edit</center></a></td>
 				<td><a
-					href="<%=request.getContextPath()%>/delete?id=${e.getId()}">Delete</a></td>
+					href="<%=request.getContextPath()%>/delete?id=${e.getId()}"><center>Delete</center></a></td>
 			</tr>
 		</c:forEach>
 	</table>

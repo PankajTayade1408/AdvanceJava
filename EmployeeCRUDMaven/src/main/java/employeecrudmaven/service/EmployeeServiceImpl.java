@@ -11,7 +11,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 	EmployeeDAO employeeDAO = new EmployeeDAOImpl();
 	
 	public void insertEmployee(EmployeeModel employee) {
+		String email=employee.getEmail();
+		ArrayList<String> emailList=EmployeeDAOImpl.selectAllEmployeeEmail();
+		if(emailList.contains(email))
+		{
+			System.out.println("Email is Already Exists...Please Enter new Email.");
+		}
+		else
+		{
 		employeeDAO.insertEmployee(employee);
+		}
 	}
 
 	public EmployeeModel getEmployeeById(int id) {
@@ -23,6 +32,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	public boolean updateEmployee(EmployeeModel employee) {
+		String email=employee.getEmail();
+		ArrayList<String> emailList=EmployeeDAOImpl.selectAllEmployeeEmail();
+		if(emailList.contains(email))
+		{
+			System.out.println("Email Already Exists.. Please Enter new email ");
+		}
+		else
+		{
+		return employeeDAO.updateEmployee(employee);
+		}
 		return employeeDAO.updateEmployee(employee);
 	}
 
@@ -31,7 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	public boolean updateEmployeeSkills(EmployeeModel employee) {
-		boolean updatedEmployeeSkills = false;
+		boolean updatedEmployeeSkills;
 		LinkedHashSet<String> skillsFromUser = new LinkedHashSet<String>();
 		skillsFromUser = employee.getSkills();
 		int employeeId = employee.getId();

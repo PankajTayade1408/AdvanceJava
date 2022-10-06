@@ -59,7 +59,7 @@
 			name="empdoj" value="${employee.getDoj()}"
 			max=<%=java.time.LocalDate.now()%> required /><br />
 		<br/>  Enter the E-mail : <input type="email" name="empemail" 
-			value="${employee.getEmail()}" max="254">	
+			value="${employee.getEmail()}" max="254" required/>	
 		<br /> <br/><input type="submit" name="submit" value="Submit" id="submit"
 			required /> <input type="reset" name="reset" value="Reset" id="reset"
 			required /> &nbsp;&nbsp;&nbsp;&nbsp; <a

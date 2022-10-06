@@ -18,6 +18,8 @@ public interface EmployeeDAO {
 	
 	public static final String SELECT_ID_FROM_EMPLOYEE_SQL = "select id from Employee1 group by id "; 
 	
+	public static final String SELECT_ALL_EMAIL_FROM_EMPLOYEE_SQL="select email from Employee1";
+	
 	public static final String DELETE_EMPLOYEE_BY_ID = "delete from Employee1 where id=?"; 
 
 	public static final String UPDATE_EMPLOYEE_SQL = "update Employee1 set firstname=?,lastname=?,age=?,salary=?,doj=?,email=? where id=?"; 
