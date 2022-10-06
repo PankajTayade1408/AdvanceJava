@@ -12,7 +12,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	public void insertEmployee(EmployeeModel employee) {
 		String email=employee.getEmail();
-		ArrayList<String> emailList=EmployeeDAOImpl.selectAllEmployeeEmail();
+		HashSet<String> emailList=EmployeeDAOImpl.selectAllEmployeeEmail();
 		if(emailList.contains(email))
 		{
 			System.out.println("Email is Already Exists...Please Enter new Email.");
@@ -32,7 +32,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	public boolean updateEmployee(EmployeeModel employee) {
-		return employeeDAO.updateEmployee(employee);
+		String email=employee.getEmail();
+		boolean updateEmployee;
+		HashSet<String> emailList=EmployeeDAOImpl.selectAllEmployeeEmail();
+		if(emailList.contains(email))
+		{
+			System.out.println("Existing email..Enter the New Email..(For Update)");
+			return updateEmployee=false;
+		}
+		else
+		{
+			return employeeDAO.updateEmployee(employee);
+		}
 	}
 
 	public boolean deleteEmployee(int id) throws Exception {

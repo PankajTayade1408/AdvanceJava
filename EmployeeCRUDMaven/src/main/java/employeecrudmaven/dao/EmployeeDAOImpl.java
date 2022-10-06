@@ -57,9 +57,9 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		return employeeId;
 	}
 	
-	public static ArrayList<String> selectAllEmployeeEmail()
+	public static HashSet<String> selectAllEmployeeEmail()
 	{
-		ArrayList<String> emailSet=new ArrayList<String>();
+		HashSet<String> emailSet=new HashSet<String>();
 		try
 		{
 			PreparedStatement preparedstatementForAllEmail=connection.prepareStatement(SELECT_ALL_EMAIL_FROM_EMPLOYEE_SQL);
