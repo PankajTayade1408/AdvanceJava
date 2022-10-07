@@ -20,6 +20,8 @@ public interface EmployeeService {
 	
 	public ArrayList<String> getEmployeeEmail();
 
+	public  String  getEmployeeEmailById(int id);
+	
 	public  boolean deleteEmployee(int id) throws Exception;
 	
 	//Methods For Employee_Skills Table=
@@ -31,6 +33,5 @@ public interface EmployeeService {
 	
 	public boolean updateEmployeeSkills(EmployeeModel employee);
 	
-	public  String  getEmployeeEmailById(int id);
 
 }

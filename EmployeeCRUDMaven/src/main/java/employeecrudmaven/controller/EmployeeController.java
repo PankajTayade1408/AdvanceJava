@@ -1,6 +1,5 @@
 package employeecrudmaven.controller;
 
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -13,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import employeecrudmaven.dao.EmployeeDAOImpl;
 import employeecrudmaven.model.EmployeeModel;
 import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.service.EmployeeServiceImpl;
@@ -64,13 +64,14 @@ public class EmployeeController extends HttpServlet {
 	}
 
 	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException{
+			throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
 		dispatcher.forward(request, response);
 	}
 
 	private void insertNewEmployee(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException, ClassNotFoundException, ServletException {
+
 		String firstName = request.getParameter("empfname");
 		String lastName = request.getParameter("emplname");
 		String employeeSkillsArray[] = new String[0];
@@ -84,26 +85,24 @@ public class EmployeeController extends HttpServlet {
 		String age = request.getParameter("empage");
 		String salary = request.getParameter("empsalary");
 		String dateOfJoining = request.getParameter("empdoj");
-		String email=request.getParameter("empemail");
-		ArrayList<String> emailList=employeeService.getEmployeeEmail();
-		if(emailList.contains(email) )
-		{
-			List<EmployeeModel> employeeList = employeeService.getAllEmployee();
-			request.setAttribute("empList", employeeList);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//index.jsp");
-			String messege="Email is already Present ... Please enter unique email...";
+		String email = request.getParameter("empemail");
+		ArrayList<String> emailList = employeeService.getEmployeeEmail();
+		EmployeeModel employee = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining, email);
+		if (emailList.contains(email)) {
+			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
+			String messege = "Email is already Present ... Please enter unique email...";
 			request.setAttribute("messege", messege);
+			request.setAttribute("employee", employee);
 			dispatcher.forward(request, response);
+			System.out.println("Skills Are " + skills);
+		} else {
+			employeeService.insertEmployee(employee);
+			employeeService.insertEmployeeSkillsById(employee.getId(), skills);
+			System.out.println(employee.getId());
+			response.sendRedirect("empList");
 		}
-		else
-		{
-		EmployeeModel employee = new EmployeeModel(firstName, lastName,age, salary, dateOfJoining,email);
-		employeeService.insertEmployee(employee);
-		employeeService.insertEmployeeSkillsById(employee.getId(), skills);
-		response.sendRedirect("empList");
-		}
-}
-	
+	}
+
 	private void deleteEmployee(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException {
 		try {
@@ -121,7 +120,7 @@ public class EmployeeController extends HttpServlet {
 		try {
 			selectedEmployee = employeeService.getEmployeeById(id);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
-			request.setAttribute("employee", selectedEmployee);			
+			request.setAttribute("employee", selectedEmployee);
 			dispatcher.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -143,26 +142,24 @@ public class EmployeeController extends HttpServlet {
 		String age = request.getParameter("empage");
 		String salary = request.getParameter("empsalary");
 		String dateOfJoining = request.getParameter("empdoj");
-		String email=request.getParameter("empemail");
-		EmployeeModel employee = new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining,email);
-		ArrayList<String> emailList=employeeService.getEmployeeEmail();
-		if(emailList.contains(email) && email.equals(employee.getEmail()))
-		{
-			
-			String messege="Existing Email...";
+		String email = request.getParameter("empemail");
+		EmployeeModel employee = new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining, email);
+		ArrayList<String> emailList = employeeService.getEmployeeEmail();
+		String emailById = employeeService.getEmployeeEmailById(id);
+		emailList.remove(emailById);
+		if (emailList.contains(email)) {
+			String messege = "Existing Email...";
 			EmployeeModel selectedEmployee;
 			selectedEmployee = employeeService.getEmployeeById(id);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
-			request.setAttribute("employee", selectedEmployee);		
+			request.setAttribute("employee", selectedEmployee);
 			request.setAttribute("messege", messege);
 			dispatcher.forward(request, response);
-		}
-		else
-		{
-		employeeService.updateEmployee(employee);
-		EmployeeModel empskills = new EmployeeModel(id, skills);
-		employeeService.updateEmployeeSkills(empskills);
-		response.sendRedirect("empList");
+		} else {
+			employeeService.updateEmployee(employee);
+			EmployeeModel empskills = new EmployeeModel(id, skills);
+			employeeService.updateEmployeeSkills(empskills);
+			response.sendRedirect("empList");
 		}
 	}
 

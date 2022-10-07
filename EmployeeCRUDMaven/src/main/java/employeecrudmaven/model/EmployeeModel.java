@@ -57,6 +57,18 @@ public EmployeeModel() {
 	
 }
 
+public EmployeeModel(String firstName, String lastName, LinkedHashSet<String> skills, String age, String salary,
+		String dateOfJoining, String email) {
+	super();
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.skills = skills;
+	this.age = age;
+	this.salary = salary;
+	this.dateOfJoining = dateOfJoining;
+	this.email = email;
+}
+
 public int getId() {
 	return id;
 }

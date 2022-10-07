@@ -9,16 +9,13 @@ import employeecrudmaven.model.EmployeeModel;
 
 public class EmployeeServiceImpl implements EmployeeService {
 	EmployeeDAO employeeDAO = new EmployeeDAOImpl();
-	
+
 	public void insertEmployee(EmployeeModel employee) {
-		String email=employee.getEmail();
-		ArrayList<String> emailList=employeeDAO.getEmployeeEmail();
-		if(emailList.contains(email))
-		{
+		String email = employee.getEmail();
+		ArrayList<String> emailList = employeeDAO.getEmployeeEmail();
+		if (emailList.contains(email)) {
 			System.out.println("Email is Already Exists...Please Enter new Email.");
-		}
-		else
-		{
+		} else {
 			employeeDAO.insertEmployee(employee);
 		}
 	}
@@ -32,15 +29,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	public boolean updateEmployee(EmployeeModel employee) {
-		String email=employee.getEmail();
-		ArrayList<String> emailList=employeeDAO.getEmployeeEmail();
-		if(emailList.contains(email))
-		{
+		String email = employee.getEmail();
+		ArrayList<String> emailList = employeeDAO.getEmployeeEmail();
+		if (emailList.contains(email)) {
 			System.out.println("Existing email..Enter the New Email..(For Update)");
 			return false;
-		}
-		else
-		{
+		} else {
 			return employeeDAO.updateEmployee(employee);
 		}
 	}
@@ -61,13 +55,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		LinkedHashSet<String> removeUserSkills = (LinkedHashSet<String>) skillsFromUser.clone();
 		LinkedHashSet<String> retainDBSkills = (LinkedHashSet<String>) skillsFromDB.clone();
 		LinkedHashSet<String> removeDBSkills = (LinkedHashSet<String>) skillsFromDB.clone();
-		if (skillsFromUser.equals(skillsFromDB)) 
-		{
+		if (skillsFromUser.equals(skillsFromDB)) {
 			System.out.println("No Need To Update ");
-			updatedEmployeeSkills=true;
-		}
-		else 
-		{
+			updatedEmployeeSkills = true;
+		} else {
 			retainUserSkills.retainAll(skillsFromDB);
 			removeDBSkills.removeAll(retainUserSkills);
 			EmployeeDAO employeeSkillsDelete = new EmployeeDAOImpl();
@@ -75,45 +66,42 @@ public class EmployeeServiceImpl implements EmployeeService {
 			retainDBSkills.retainAll(skillsFromUser);
 			removeUserSkills.removeAll(retainDBSkills);
 			EmployeeDAO employeeSkillsInsert = new EmployeeDAOImpl();
-			employeeSkillsInsert.insertEmployeeSkillsById(employeeId,removeUserSkills);
-			updatedEmployeeSkills=true;
+			employeeSkillsInsert.insertEmployeeSkillsById(employeeId, removeUserSkills);
+			updatedEmployeeSkills = true;
 		}
 		return updatedEmployeeSkills;
 	}
-	
+
 	public LinkedHashSet<String> getEmployeeSkillsById(int id) {
 		return employeeDAO.getEmployeeSkillsById(id);
 	}
-	
+
 	public void deleteEmployeeSkillsById(int employeeId, LinkedHashSet<String> skills) {
 		employeeDAO.deleteEmployeeSkillsById(employeeId, skills);
 	}
-	
-	public int insertEmployeeSkillsById(int id,LinkedHashSet<String> skills) {
-		int latestId=0;
-		EmployeeModel employee=new EmployeeModel();
-		latestId = EmployeeDAOImpl.selectLatestIdFromEmployee(id);
-		if(employee.getId()==0 || employee.getId()==latestId)
-		{
-			id=latestId;
-			employeeDAO.insertEmployeeSkillsById(id,skills);  
-		}
-		else if(employee.getId()<id)
-		{ 
-			id=employee.getId();
-			employeeDAO.insertEmployeeSkillsById(id,skills);
+
+	public int insertEmployeeSkillsById(int id, LinkedHashSet<String> skills) {
+		int latestId = 0;
+		EmployeeModel employee = new EmployeeModel();
+		latestId = EmployeeDAOImpl.selectLatestIdFromEmployee();
+
+		if (employee.getId() == 0 || employee.getId() == latestId) {
+			id = latestId;
+			employeeDAO.insertEmployeeSkillsById(id, skills);
+		} else if (employee.getId() < id) {
+			id = employee.getId();
+			employeeDAO.insertEmployeeSkillsById(id, skills);
 		}
 		return id;
 	}
-	
 
-	@Override
 	public ArrayList<String> getEmployeeEmail() {
 		return employeeDAO.getEmployeeEmail();
 	}
 
 	public String getEmployeeEmailById(int id) {
-		// TODO Auto-generated method stub
+
 		return employeeDAO.getEmployeeEmailById(id);
 	}
+
 }
