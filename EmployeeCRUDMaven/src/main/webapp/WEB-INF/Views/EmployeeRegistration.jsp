@@ -22,10 +22,11 @@
 </style>
 </head>
 <body>
-<c:out value="${employeeEmail}">
+
+<c:out value="${messege}">
 </c:out>
 	<c:if test="${allEmail.contains(employeeEmail)}">
-		<form action="<%=request.getContextPath() %>/edit" method="post">
+	<!-- 	<form action="<%=request.getContextPath() %>/edit" method="post">  -->
 		<h2>Existing Email</h2>
 	</c:if>
 	

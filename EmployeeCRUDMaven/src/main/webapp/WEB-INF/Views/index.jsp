@@ -10,17 +10,8 @@ page import="employeecrudmaven.model.EmployeeModel.*"%>
 	</h1>
 	<br>
 	<br>
-	
-	
-	
-	<%-- 
-	  <c:out value="${emailList.getEmail()}">
-	</c:out>  --%>
-	 <%-- <c:forEach items="${emailList}" var="e">
-	 <c:if test "${e.emailList == empList.getEmail()}">
-	<h4>Employee Email Already Exists..Please enter new email.</h4>
-	 </c:if>
-	</c:forEach>  --%>
+<c:out value="${messege}">
+</c:out>
 	<h3>Employee Information</h3>
 	<table border="1" width="80%" padding="10px">
 		<tr>

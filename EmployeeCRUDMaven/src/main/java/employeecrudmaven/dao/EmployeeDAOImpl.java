@@ -59,7 +59,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	
 	public ArrayList<String> getEmployeeEmail()
 	{
-		ArrayList<String> emailSet=new ArrayList<String>();
+		ArrayList<String> emailList=new ArrayList<String>();
 		try
 		{
 			PreparedStatement preparedstatementForAllEmail=connection.prepareStatement(SELECT_ALL_EMAIL_FROM_EMPLOYEE_SQL);
@@ -67,13 +67,13 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			while(resultsetForAllEmail.next())
 			{
 				String email=resultsetForAllEmail.getString("email");
-				emailSet.add(email);
+				emailList.add(email);
 			}
 		}catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		return emailSet;
+		return emailList;
 	}
 	
 	public  String  getEmployeeEmailById(int id)

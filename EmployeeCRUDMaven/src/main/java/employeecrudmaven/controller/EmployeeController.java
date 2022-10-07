@@ -1,6 +1,8 @@
 package employeecrudmaven.controller;
 
+
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -11,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import employeecrudmaven.dao.EmployeeDAOImpl;
 import employeecrudmaven.model.EmployeeModel;
 import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.service.EmployeeServiceImpl;
@@ -69,7 +70,7 @@ public class EmployeeController extends HttpServlet {
 	}
 
 	private void insertNewEmployee(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, SQLException, ClassNotFoundException {
+			throws IOException, SQLException, ClassNotFoundException, ServletException {
 		String firstName = request.getParameter("empfname");
 		String lastName = request.getParameter("emplname");
 		String employeeSkillsArray[] = new String[0];
@@ -84,10 +85,23 @@ public class EmployeeController extends HttpServlet {
 		String salary = request.getParameter("empsalary");
 		String dateOfJoining = request.getParameter("empdoj");
 		String email=request.getParameter("empemail");
+		ArrayList<String> emailList=employeeService.getEmployeeEmail();
+		if(emailList.contains(email) )
+		{
+			List<EmployeeModel> employeeList = employeeService.getAllEmployee();
+			request.setAttribute("empList", employeeList);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//index.jsp");
+			String messege="Email is already Present ... Please enter unique email...";
+			request.setAttribute("messege", messege);
+			dispatcher.forward(request, response);
+		}
+		else
+		{
 		EmployeeModel employee = new EmployeeModel(firstName, lastName,age, salary, dateOfJoining,email);
 		employeeService.insertEmployee(employee);
 		employeeService.insertEmployeeSkillsById(employee.getId(), skills);
 		response.sendRedirect("empList");
+		}
 }
 	
 	private void deleteEmployee(HttpServletRequest request, HttpServletResponse response)
@@ -106,14 +120,8 @@ public class EmployeeController extends HttpServlet {
 		EmployeeModel selectedEmployee;
 		try {
 			selectedEmployee = employeeService.getEmployeeById(id);
-			ArrayList<String> emailList=employeeService.getEmployeeEmail();
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
-			request.setAttribute("employee", selectedEmployee);
-			EmployeeModel employee =new EmployeeModel();
-			String email=employee.getEmail();
-			request.setAttribute("allEmail",emailList);
-			request.setAttribute("employeeEmail", email);
-			System.out.println("Selected email"+selectedEmployee.getEmail());
+			request.setAttribute("employee", selectedEmployee);			
 			dispatcher.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -121,7 +129,7 @@ public class EmployeeController extends HttpServlet {
 	}
 
 	private void updateEmployee(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException {
+			throws SQLException, IOException, ServletException {
 		int id = Integer.parseInt(request.getParameter("empId"));
 		String firstName = request.getParameter("empfname");
 		String lastName = request.getParameter("emplname");
@@ -137,20 +145,30 @@ public class EmployeeController extends HttpServlet {
 		String dateOfJoining = request.getParameter("empdoj");
 		String email=request.getParameter("empemail");
 		EmployeeModel employee = new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining,email);
+		ArrayList<String> emailList=employeeService.getEmployeeEmail();
+		if(emailList.contains(email) && email.equals(employee.getEmail()))
+		{
+			
+			String messege="Existing Email...";
+			EmployeeModel selectedEmployee;
+			selectedEmployee = employeeService.getEmployeeById(id);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
+			request.setAttribute("employee", selectedEmployee);		
+			request.setAttribute("messege", messege);
+			dispatcher.forward(request, response);
+		}
+		else
+		{
 		employeeService.updateEmployee(employee);
 		EmployeeModel empskills = new EmployeeModel(id, skills);
 		employeeService.updateEmployeeSkills(empskills);
 		response.sendRedirect("empList");
+		}
 	}
 
 	private void listEmployee(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			EmployeeModel employee=new EmployeeModel();
 			List<EmployeeModel> employeeList = employeeService.getAllEmployee();
-			ArrayList<String> emailList=employeeService.getEmployeeEmail();
-			String email=employeeService.getEmployeeEmailById(employee.getId());
-			System.out.println("Email By Id "+email);
-			request.setAttribute("emailList", emailList);
 			request.setAttribute("empList", employeeList);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//index.jsp");
 			dispatcher.forward(request, response);
