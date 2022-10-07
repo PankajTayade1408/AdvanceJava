@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import employeecrudmaven.dao.EmployeeDAOImpl;
 import employeecrudmaven.model.EmployeeModel;
 import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.service.EmployeeServiceImpl;
@@ -105,8 +106,14 @@ public class EmployeeController extends HttpServlet {
 		EmployeeModel selectedEmployee;
 		try {
 			selectedEmployee = employeeService.getEmployeeById(id);
+			ArrayList<String> emailList=employeeService.getEmployeeEmail();
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
 			request.setAttribute("employee", selectedEmployee);
+			EmployeeModel employee =new EmployeeModel();
+			String email=employee.getEmail();
+			request.setAttribute("allEmail",emailList);
+			request.setAttribute("employeeEmail", email);
+			System.out.println("Selected email"+selectedEmployee.getEmail());
 			dispatcher.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -138,7 +145,12 @@ public class EmployeeController extends HttpServlet {
 
 	private void listEmployee(HttpServletRequest request, HttpServletResponse response) {
 		try {
+			EmployeeModel employee=new EmployeeModel();
 			List<EmployeeModel> employeeList = employeeService.getAllEmployee();
+			ArrayList<String> emailList=employeeService.getEmployeeEmail();
+			String email=employeeService.getEmployeeEmailById(employee.getId());
+			System.out.println("Email By Id "+email);
+			request.setAttribute("emailList", emailList);
 			request.setAttribute("empList", employeeList);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//index.jsp");
 			dispatcher.forward(request, response);

@@ -1,6 +1,7 @@
 package employeecrudmaven.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public interface EmployeeService {
 	public List<EmployeeModel> getAllEmployee();
 	
 	public  boolean updateEmployee(EmployeeModel employee) throws SQLException;
+	
+	public ArrayList<String> getEmployeeEmail();
 
 	public  boolean deleteEmployee(int id) throws Exception;
 	
@@ -27,5 +30,7 @@ public interface EmployeeService {
 	public  int insertEmployeeSkillsById(int id,LinkedHashSet<String> skills);
 	
 	public boolean updateEmployeeSkills(EmployeeModel employee);
+	
+	public  String  getEmployeeEmailById(int id);
 
 }

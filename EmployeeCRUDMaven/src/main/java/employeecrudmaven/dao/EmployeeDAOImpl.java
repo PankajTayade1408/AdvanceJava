@@ -57,7 +57,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		return employeeId;
 	}
 	
-	public static ArrayList<String> selectAllEmployeeEmail()
+	public ArrayList<String> getEmployeeEmail()
 	{
 		ArrayList<String> emailSet=new ArrayList<String>();
 		try
@@ -76,6 +76,26 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		return emailSet;
 	}
 	
+	public  String  getEmployeeEmailById(int id)
+	{
+		EmployeeModel employee=new EmployeeModel();
+		String employeeEmail="";
+		try
+		{
+			PreparedStatement preparedstatementForgetEmailById=connection.prepareStatement(SELECT_EMPLOYEE_EMAIL_BY_ID);
+			preparedstatementForgetEmailById.setInt(1, employee.getId());
+			ResultSet resultsetForGetEmailById=preparedstatementForgetEmailById.executeQuery();
+			while(resultsetForGetEmailById.next())
+			{
+				employeeEmail=resultsetForGetEmailById.getString("email");
+				System.out.println(employeeEmail);
+			}
+		}catch(Exception e )
+		{
+			e.printStackTrace();
+		}
+		return employeeEmail;
+	}
 	public int insertEmployeeSkillsById(int id,LinkedHashSet<String> skills) {
 		try {
 			PreparedStatement preparedstatatementForInsertSkills = connection

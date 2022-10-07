@@ -20,6 +20,8 @@ public interface EmployeeDAO {
 	
 	public static final String SELECT_ALL_EMAIL_FROM_EMPLOYEE_SQL="select email from Employee1";
 	
+	public static final String SELECT_EMPLOYEE_EMAIL_BY_ID="select email from Employee1 where id=?";
+	
 	public static final String DELETE_EMPLOYEE_BY_ID = "delete from Employee1 where id=?"; 
 
 	public static final String UPDATE_EMPLOYEE_SQL = "update Employee1 set firstname=?,lastname=?,age=?,salary=?,doj=?,email=? where id=?"; 
@@ -41,8 +43,12 @@ public interface EmployeeDAO {
 	public List<EmployeeModel> getAllEmployee();
 
 	public boolean updateEmployee(EmployeeModel employee);
+	
+	public  ArrayList<String> getEmployeeEmail();
  
 	public boolean deleteEmployee(int id) throws Exception;
+	
+	public  String  getEmployeeEmailById(int id);
 	
 	//Methods For Employee_Skill Table
 	public  int insertEmployeeSkillsById(int id,LinkedHashSet<String> skills);
@@ -50,5 +56,7 @@ public interface EmployeeDAO {
 	public void deleteEmployeeSkillsById(int id,LinkedHashSet<String> skills);
 
 	public  LinkedHashSet<String> getEmployeeSkillsById(int id);
+
+
 
 }

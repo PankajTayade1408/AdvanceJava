@@ -12,14 +12,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	public void insertEmployee(EmployeeModel employee) {
 		String email=employee.getEmail();
-		ArrayList<String> emailList=EmployeeDAOImpl.selectAllEmployeeEmail();
+		ArrayList<String> emailList=employeeDAO.getEmployeeEmail();
 		if(emailList.contains(email))
 		{
 			System.out.println("Email is Already Exists...Please Enter new Email.");
 		}
 		else
 		{
-		employeeDAO.insertEmployee(employee);
+			employeeDAO.insertEmployee(employee);
 		}
 	}
 
@@ -33,7 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	public boolean updateEmployee(EmployeeModel employee) {
 		String email=employee.getEmail();
-		ArrayList<String> emailList=EmployeeDAOImpl.selectAllEmployeeEmail();
+		ArrayList<String> emailList=employeeDAO.getEmployeeEmail();
 		if(emailList.contains(email))
 		{
 			System.out.println("Existing email..Enter the New Email..(For Update)");
@@ -104,5 +104,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 			employeeDAO.insertEmployeeSkillsById(id,skills);
 		}
 		return id;
+	}
+	
+
+	@Override
+	public ArrayList<String> getEmployeeEmail() {
+		return employeeDAO.getEmployeeEmail();
+	}
+
+	public String getEmployeeEmailById(int id) {
+		// TODO Auto-generated method stub
+		return employeeDAO.getEmployeeEmailById(id);
 	}
 }
