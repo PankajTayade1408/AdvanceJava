@@ -83,8 +83,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public int insertEmployeeSkillsById(int id, LinkedHashSet<String> skills) {
 		int latestId = 0;
 		EmployeeModel employee = new EmployeeModel();
-		latestId = EmployeeDAOImpl.selectLatestIdFromEmployee();
-
+		
+		latestId = employeeDAO.selectLatestIdFromEmployee();
 		if (employee.getId() == 0 || employee.getId() == latestId) {
 			id = latestId;
 			employeeDAO.insertEmployeeSkillsById(id, skills);
@@ -92,6 +92,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			id = employee.getId();
 			employeeDAO.insertEmployeeSkillsById(id, skills);
 		}
+		System.out.println("ServiceImpl class Id is "+id);
 		return id;
 	}
 
@@ -102,6 +103,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public String getEmployeeEmailById(int id) {
 
 		return employeeDAO.getEmployeeEmailById(id);
+	}
+
+	public int selectLatestIdFromEmployee() {
+		// TODO Auto-generated method stub
+		return employeeDAO.selectLatestIdFromEmployee();
 	}
 
 }

@@ -18,7 +18,7 @@ import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.service.EmployeeServiceImpl;
 
 @WebServlet("/")
-public class EmployeeController extends HttpServlet {
+public class EmployeeController extends HttpServlet{
 	EmployeeService employeeService = new EmployeeServiceImpl();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -87,18 +87,19 @@ public class EmployeeController extends HttpServlet {
 		String dateOfJoining = request.getParameter("empdoj");
 		String email = request.getParameter("empemail");
 		ArrayList<String> emailList = employeeService.getEmployeeEmail();
-		EmployeeModel employee = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining, email);
+		int id=employeeService.selectLatestIdFromEmployee();
 		if (emailList.contains(email)) {
+			EmployeeModel employee = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining, email);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
 			String messege = "Email is already Present ... Please enter unique email...";
 			request.setAttribute("messege", messege);
 			request.setAttribute("employee", employee);
 			dispatcher.forward(request, response);
-			System.out.println("Skills Are " + skills);
 		} else {
+			System.out.println("Id Controller Class  "+id);
+			EmployeeModel employee=new EmployeeModel(firstName,lastName,age,salary,dateOfJoining,email);
 			employeeService.insertEmployee(employee);
-			employeeService.insertEmployeeSkillsById(employee.getId(), skills);
-			System.out.println(employee.getId());
+			employeeService.insertEmployeeSkillsById(id+1, skills);
 			response.sendRedirect("empList");
 		}
 	}
@@ -173,7 +174,7 @@ public class EmployeeController extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doGet(request, response);

@@ -24,6 +24,8 @@ public interface EmployeeService {
 	
 	public  boolean deleteEmployee(int id) throws Exception;
 	
+	public int selectLatestIdFromEmployee();
+	
 	//Methods For Employee_Skills Table=
 	public  LinkedHashSet<String> getEmployeeSkillsById(int id);
 	

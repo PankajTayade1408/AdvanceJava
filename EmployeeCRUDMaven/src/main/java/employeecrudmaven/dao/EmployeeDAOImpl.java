@@ -25,7 +25,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		}
 	}
 
-	public static int selectLatestIdFromEmployee() {
+	public int selectLatestIdFromEmployee() {
 		int employeeId = 0;
 		try {
 			PreparedStatement preparedstatementForLatestId = connection
@@ -37,6 +37,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return employeeId;
 	}
 
@@ -93,6 +94,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 					.prepareStatement(INSERT_EMPLOYEE_SKILLS_SQL);
 			LinkedHashSet<String> checkSkillsSet = new LinkedHashSet<String>();
 			preparedstatatementForInsertSkills.setInt(1, id);
+			System.out.println("DAOImpl id "+id);
 			checkSkillsSet = skills;
 			for (String checkedSkills : checkSkillsSet) {
 				preparedstatatementForInsertSkills.setString(2, checkedSkills);
@@ -103,7 +105,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		}
 		return id;
 	}
-
+	
 	public EmployeeModel getEmployeeById(int id) {
 		EmployeeModel employee = null;
 		try {

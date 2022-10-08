@@ -50,6 +50,8 @@ public interface EmployeeDAO {
 	
 	public  String  getEmployeeEmailById(int id);
 	
+	public int selectLatestIdFromEmployee();
+	
 	//Methods For Employee_Skill Table
 	public  int insertEmployeeSkillsById(int id,LinkedHashSet<String> skills);
 	

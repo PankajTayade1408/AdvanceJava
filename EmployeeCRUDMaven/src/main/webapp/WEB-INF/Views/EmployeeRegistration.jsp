@@ -34,6 +34,7 @@
 		<form action="<%=request.getContextPath() %>/update" method="post">
 	</c:if>
 	<div class="Form">
+	
 		<input type="hidden" name="empId" value="${employee.getId()}">
 		 
 		 Enter the Employee Name : <input type="text" name="empfname"placeholder="Enter the First Name" value="${employee.getFirstname()}" required /> 
