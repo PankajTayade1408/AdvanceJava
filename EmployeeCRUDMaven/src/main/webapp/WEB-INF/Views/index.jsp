@@ -5,6 +5,9 @@ page import="employeecrudmaven.model.EmployeeModel.*"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <body>
+
+<c:out value="${employee.getId()}">
+</c:out>
 	<h1>
 		<a href="<%=request.getContextPath()%>/new">Add Employee Detail's</a>
 	</h1>

@@ -83,16 +83,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public int insertEmployeeSkillsById(int id, LinkedHashSet<String> skills) {
 		int latestId = 0;
 		EmployeeModel employee = new EmployeeModel();
-		
+		System.out.println("SKills are "+skills);
 		latestId = employeeDAO.selectLatestIdFromEmployee();
 		if (employee.getId() == 0 || employee.getId() == latestId) {
 			id = latestId;
+			System.out.println("ServiceImpl class Id is "+id);
 			employeeDAO.insertEmployeeSkillsById(id, skills);
 		} else if (employee.getId() < id) {
 			id = employee.getId();
+			System.out.println("ServiceImpl class Id is "+id);
 			employeeDAO.insertEmployeeSkillsById(id, skills);
 		}
-		System.out.println("ServiceImpl class Id is "+id);
 		return id;
 	}
 

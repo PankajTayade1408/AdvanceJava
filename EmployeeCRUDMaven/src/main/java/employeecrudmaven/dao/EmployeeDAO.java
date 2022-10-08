@@ -1,6 +1,5 @@
 package employeecrudmaven.dao;
 
-import java.sql.*;
 import java.util.*;
 
 import employeecrudmaven.model.EmployeeModel;

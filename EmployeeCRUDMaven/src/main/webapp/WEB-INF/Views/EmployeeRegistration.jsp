@@ -27,14 +27,16 @@
 <body>
 <c:out value="${messege}">
 </c:out>
-	<c:if test="${employee==null}">
+	<c:if test="${employe==null}">
 		<form action="<%=request.getContextPath() %>/insert" method="post">
 	</c:if>
-	<c:if test="${employee!=null }">
+	<%-- <c:if test="${employee.getId()==0}">
+		<form action="<%=request.getContextPath() %>/update" method="post">
+	</c:if> --%>
+	<c:if test="${employee!=null}">
 		<form action="<%=request.getContextPath() %>/update" method="post">
 	</c:if>
 	<div class="Form">
-	
 		<input type="hidden" name="empId" value="${employee.getId()}">
 		 
 		 Enter the Employee Name : <input type="text" name="empfname"placeholder="Enter the First Name" value="${employee.getFirstname()}" required /> 
