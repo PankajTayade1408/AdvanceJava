@@ -15,8 +15,6 @@ public interface EmployeeDAO {
 	
 	public static final String SELECT_LATEST_ID_FROM_EMPLOYEE_SQL = "select id from Employee1 order by id desc limit 1 ";
 	
-	public static final String SELECT_ID_FROM_EMPLOYEE_SQL = "select id from Employee1 group by id "; 
-	
 	public static final String SELECT_ALL_EMAIL_FROM_EMPLOYEE_SQL="select email from Employee1";
 	
 	public static final String SELECT_EMPLOYEE_EMAIL_BY_ID="select email from Employee1 where id=?";
@@ -57,7 +55,5 @@ public interface EmployeeDAO {
 	public void deleteEmployeeSkillsById(int id,LinkedHashSet<String> skills);
 
 	public  LinkedHashSet<String> getEmployeeSkillsById(int id);
-
-
 
 }

@@ -40,21 +40,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		
 		return employeeId;
 	}
-
-	public static int selectIdFromEmployee(int id) {
-		int employeeId = 0;
-		try {
-			PreparedStatement preparedstatementForLatestId = connection.prepareStatement(SELECT_ID_FROM_EMPLOYEE_SQL);
-			ResultSet resultsetForLatestId = preparedstatementForLatestId.executeQuery();
-			while (resultsetForLatestId.next()) {
-				employeeId = resultsetForLatestId.getInt("id");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return employeeId;
-	}
-
+	
 	public ArrayList<String> getEmployeeEmail() {
 		ArrayList<String> emailList = new ArrayList<String>();
 		try {
@@ -88,24 +74,6 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		return employeeEmail;
 	}
 
-	public int insertEmployeeSkillsById(int id, LinkedHashSet<String> skills) {
-		try {
-			PreparedStatement preparedstatatementForInsertSkills = connection
-					.prepareStatement(INSERT_EMPLOYEE_SKILLS_SQL);
-			LinkedHashSet<String> checkSkillsSet = new LinkedHashSet<String>();
-			preparedstatatementForInsertSkills.setInt(1, id);
-			System.out.println("DAOImpl id "+id);
-			checkSkillsSet = skills;
-			for (String checkedSkills : checkSkillsSet) {
-				preparedstatatementForInsertSkills.setString(2, checkedSkills);
-				preparedstatatementForInsertSkills.executeUpdate();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return id;
-	}
-	
 	public EmployeeModel getEmployeeById(int id) {
 		EmployeeModel employee = null;
 		try {
@@ -130,7 +98,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		}
 		return employee;
 	}
-
+	
 	public List<EmployeeModel> getAllEmployee() {
 		List<EmployeeModel> employeeList = new ArrayList<EmployeeModel>();
 		try {
@@ -180,6 +148,23 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		}
 		return deleteEmployee;
 	}
+	
+	public int insertEmployeeSkillsById(int id, LinkedHashSet<String> skills) {
+		try {
+			PreparedStatement preparedstatatementForInsertSkills = connection
+					.prepareStatement(INSERT_EMPLOYEE_SKILLS_SQL);
+			LinkedHashSet<String> checkSkillsSet = new LinkedHashSet<String>();
+			preparedstatatementForInsertSkills.setInt(1, id);
+			checkSkillsSet = skills;
+			for (String checkedSkills : checkSkillsSet) {
+				preparedstatatementForInsertSkills.setString(2, checkedSkills);
+				preparedstatatementForInsertSkills.executeUpdate();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return id;
+	}
 
 	public LinkedHashSet<String> getEmployeeSkillsById(int id) {
 		LinkedHashSet<String> skills = new LinkedHashSet<String>();
@@ -188,13 +173,13 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 					.prepareStatement(SELECT_EMPLOYEE_SKILL_BY_ID_SQL);
 			preparedstatementForGetSkillsById.setInt(1, id);
 			ResultSet resultSetForGetSkillsById = preparedstatementForGetSkillsById.executeQuery();
-			LinkedHashSet<String> skillsFromBackEnd = new LinkedHashSet<String>();
+			LinkedHashSet<String> skillsFromDB = new LinkedHashSet<String>();
 			while (resultSetForGetSkillsById.next()) {
 				String backEndSkills = resultSetForGetSkillsById.getString("empskills");
-				skillsFromBackEnd.add(backEndSkills);
-				skills = (LinkedHashSet) skillsFromBackEnd.clone();
+				skillsFromDB.add(backEndSkills);
+				skills = (LinkedHashSet) skillsFromDB.clone();
 			}
-			skillsFromBackEnd.clear();
+			skillsFromDB.clear();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -206,28 +191,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			PreparedStatement preparedstatementForDeleteSkills = connection
 					.prepareStatement(DELETE_EMPLOYEE_SKILLS_SQL);
 			preparedstatementForDeleteSkills.setInt(1, employeeId);
-			for (String skillsToBeDelete : skills) {
-				preparedstatementForDeleteSkills.setString(2, skillsToBeDelete);
+			for (String deleteSkills : skills) {
+				preparedstatementForDeleteSkills.setString(2, deleteSkills);
 				preparedstatementForDeleteSkills.executeUpdate();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	public static void main(String args[]) throws Exception {
-		EmployeeModel employee = new EmployeeModel();
-		int id = 0;
-		LinkedHashSet<String> skills = new LinkedHashSet<String>();
-		EmployeeDAOImpl employeeDAOImpl = new EmployeeDAOImpl();
-		employeeDAOImpl.insertEmployee(employee);
-		employeeDAOImpl.getEmployeeById(id);
-		employeeDAOImpl.getAllEmployee();
-		employeeDAOImpl.deleteEmployee(id);
-		employeeDAOImpl.updateEmployee(employee);
-		employeeDAOImpl.insertEmployeeSkillsById(id, skills);
-		employeeDAOImpl.getEmployeeSkillsById(id);
-		employeeDAOImpl.deleteEmployeeSkillsById(id, skills);
-	}
-
 }

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import employeecrudmaven.dao.EmployeeDAOImpl;
 import employeecrudmaven.model.EmployeeModel;
 import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.service.EmployeeServiceImpl;
@@ -69,7 +70,6 @@ public class EmployeeController extends HttpServlet{
 
 	private void insertNewEmployee(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException, ClassNotFoundException, ServletException {
-		System.out.println("Insert Controller");
 		String firstName = request.getParameter("empfname");
 		String lastName = request.getParameter("emplname");
 		String employeeSkillsArray[] = new String[0];
@@ -85,17 +85,16 @@ public class EmployeeController extends HttpServlet{
 		String dateOfJoining = request.getParameter("empdoj");
 		String email = request.getParameter("empemail");
 		ArrayList<String> emailList = employeeService.getEmployeeEmail();
-	//	emailList.remove(email);
 		if (emailList.contains(email)) {
 			EmployeeModel employee = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining, email);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
 			String messege = "Email is already Present ... Please enter unique email...";
 			request.setAttribute("messege", messege);
+			int id=employeeService.selectLatestIdFromEmployee();
+			request.setAttribute("latestId", id);
 			request.setAttribute("employee", employee);
-			request.setAttribute("empId",employee.getId());
 			dispatcher.forward(request, response);
 		} else {
-			System.out.println("adksfjadsf");
 			EmployeeModel employee=new EmployeeModel(firstName,lastName,age,salary,dateOfJoining,email);
 			employeeService.insertEmployee(employee);
 			employeeService.insertEmployeeSkillsById(employee.getId(), skills);
@@ -132,11 +131,11 @@ public class EmployeeController extends HttpServlet{
 		int id = Integer.parseInt(request.getParameter("empId"));
 		String firstName = request.getParameter("empfname");
 		String lastName = request.getParameter("emplname");
-		String employeeSkillsArray[] = request.getParameterValues("empSkills");
+		String employeeSkills[] = request.getParameterValues("empSkills");
 		String checkedEmployeeSkills = "";
 		LinkedHashSet<String> skills = new LinkedHashSet<String>();
-		for (int i = 0; i < employeeSkillsArray.length; i++) {
-			checkedEmployeeSkills = employeeSkillsArray[i];
+		for (int i = 0; i < employeeSkills.length; i++) {
+			checkedEmployeeSkills = employeeSkills[i];
 			skills.add(checkedEmployeeSkills);
 		}
 		String age = request.getParameter("empage");

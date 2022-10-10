@@ -35,5 +35,4 @@ public interface EmployeeService {
 	
 	public boolean updateEmployeeSkills(EmployeeModel employee);
 	
-
 }

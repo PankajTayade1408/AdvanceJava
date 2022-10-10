@@ -11,13 +11,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	EmployeeDAO employeeDAO = new EmployeeDAOImpl();
 
 	public void insertEmployee(EmployeeModel employee) {
-		String email = employee.getEmail();
-		ArrayList<String> emailList = employeeDAO.getEmployeeEmail();
-		if (emailList.contains(email)) {
-			System.out.println("Email is Already Exists...Please Enter new Email.");
-		} else {
 			employeeDAO.insertEmployee(employee);
-		}
 	}
 
 	public EmployeeModel getEmployeeById(int id) {
@@ -29,14 +23,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	public boolean updateEmployee(EmployeeModel employee) {
-		String email = employee.getEmail();
-		ArrayList<String> emailList = employeeDAO.getEmployeeEmail();
-		if (emailList.contains(email)) {
-			System.out.println("Existing email..Enter the New Email..(For Update)");
-			return false;
-		} else {
 			return employeeDAO.updateEmployee(employee);
-		}
 	}
 
 	public boolean deleteEmployee(int id) throws Exception {
@@ -56,7 +43,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		LinkedHashSet<String> retainDBSkills = (LinkedHashSet<String>) skillsFromDB.clone();
 		LinkedHashSet<String> removeDBSkills = (LinkedHashSet<String>) skillsFromDB.clone();
 		if (skillsFromUser.equals(skillsFromDB)) {
-			System.out.println("No Need To Update ");
 			updatedEmployeeSkills = true;
 		} else {
 			retainUserSkills.retainAll(skillsFromDB);
@@ -83,15 +69,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public int insertEmployeeSkillsById(int id, LinkedHashSet<String> skills) {
 		int latestId = 0;
 		EmployeeModel employee = new EmployeeModel();
-		System.out.println("SKills are "+skills);
 		latestId = employeeDAO.selectLatestIdFromEmployee();
 		if (employee.getId() == 0 || employee.getId() == latestId) {
 			id = latestId;
-			System.out.println("ServiceImpl class Id is "+id);
 			employeeDAO.insertEmployeeSkillsById(id, skills);
 		} else if (employee.getId() < id) {
 			id = employee.getId();
-			System.out.println("ServiceImpl class Id is "+id);
 			employeeDAO.insertEmployeeSkillsById(id, skills);
 		}
 		return id;
@@ -107,7 +90,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	public int selectLatestIdFromEmployee() {
-		// TODO Auto-generated method stub
 		return employeeDAO.selectLatestIdFromEmployee();
 	}
 

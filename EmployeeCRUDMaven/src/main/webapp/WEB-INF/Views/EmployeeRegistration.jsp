@@ -2,6 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="java.util.*,java.text.*,java.time.*"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,11 +14,9 @@
 	margin-left: 400px;
 	margin-top:50px;
 }
-
 #submit {
 	margin-left: 150px;
 }
-
 #reset {
 	margin-left: 30px;
 }
@@ -27,15 +26,12 @@
 <body>
 <c:out value="${messege}">
 </c:out>
-	<c:if test="${employe==null}">
+	<c:if test="${employee.getId()<latestId || employee==null }">
 		<form action="<%=request.getContextPath() %>/insert" method="post">
 	</c:if>
-	<%-- <c:if test="${employee.getId()==0}">
+  	<c:if test="${employee!=null }"> 
 		<form action="<%=request.getContextPath() %>/update" method="post">
-	</c:if> --%>
-	<c:if test="${employee!=null}">
-		<form action="<%=request.getContextPath() %>/update" method="post">
-	</c:if>
+ 	</c:if> 
 	<div class="Form">
 		<input type="hidden" name="empId" value="${employee.getId()}">
 		 

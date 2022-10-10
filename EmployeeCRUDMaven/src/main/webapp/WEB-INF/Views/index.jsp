@@ -1,20 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ 
-page import="employeecrudmaven.model.EmployeeModel.*"%>
+<%@ page import="employeecrudmaven.model.EmployeeModel.*"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <html>
 <body>
-
-<c:out value="${employee.getId()}">
-</c:out>
 	<h1>
 		<a href="<%=request.getContextPath()%>/new">Add Employee Detail's</a>
 	</h1>
 	<br>
 	<br>
-<c:out value="${messege}">
-</c:out>
 	<h3>Employee Information</h3>
 	<table border="1" width="80%" padding="10px">
 		<tr>
@@ -32,7 +27,7 @@ page import="employeecrudmaven.model.EmployeeModel.*"%>
 		<%
 			int count = 0;
 		%>
-		<c:forEach items="${empList}" var="e">		
+		<c:forEach items="${empList}" var="e">	
 			<tr>
 				<td><center>
 				<%
@@ -48,10 +43,8 @@ page import="employeecrudmaven.model.EmployeeModel.*"%>
 				<td><center>${e.getSalary()}</center></td>
 				<td><center>${e.getDoj()}</center></td>
 				<td><center>${e.getEmail()}</center></td>
-				<td><a
-					 href="<%=request.getContextPath()%>/edit?id=${e.getId()}"><center>Edit</center></a></td>
-				<td><a
-					href="<%=request.getContextPath()%>/delete?id=${e.getId()}"><center>Delete</center></a></td>
+				<td><a href="<%=request.getContextPath()%>/edit?id=${e.getId()}"><center>Edit</center></a></td>
+				<td><a	href="<%=request.getContextPath()%>/delete?id=${e.getId()}"><center>Delete</center></a></td>
 			</tr>
 		</c:forEach>
 	</table>
