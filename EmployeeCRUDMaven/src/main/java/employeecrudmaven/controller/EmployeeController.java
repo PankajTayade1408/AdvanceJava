@@ -17,7 +17,7 @@ import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.service.EmployeeServiceImpl;
 
 @WebServlet("/")
-public class EmployeeController extends HttpServlet{
+public class EmployeeController extends HttpServlet {
 	EmployeeService employeeService = new EmployeeServiceImpl();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -93,11 +93,11 @@ public class EmployeeController extends HttpServlet{
 			request.setAttribute("employee", employee);
 			dispatcher.forward(request, response);
 		} else {
-			EmployeeModel employee=new EmployeeModel(firstName,lastName,age,salary,dateOfJoining,email);
+			EmployeeModel employee = new EmployeeModel(firstName, lastName, age, salary, dateOfJoining, email);
 			employeeService.insertEmployee(employee);
 			employeeService.insertEmployeeSkillsById(employee.getId(), skills);
 			response.sendRedirect("empList");
-		}  
+		}
 	}
 
 	private void deleteEmployee(HttpServletRequest request, HttpServletResponse response)
@@ -157,7 +157,7 @@ public class EmployeeController extends HttpServlet{
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doGet(request, response);
