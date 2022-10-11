@@ -13,7 +13,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public void insertEmployee(EmployeeModel employee) {
 			employeeDAO.insertEmployee(employee);
 	}
-
+	
+	public boolean validateEmail(String email) {
+		ArrayList<String> emailList = getEmployeeEmail();
+		if (emailList.contains(email)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public EmployeeModel getEmployeeById(int id) {
 		return employeeDAO.getEmployeeById(id);
 	}

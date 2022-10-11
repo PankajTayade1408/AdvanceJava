@@ -85,13 +85,11 @@ public class EmployeeController extends HttpServlet{
 		String dateOfJoining = request.getParameter("empdoj");
 		String email = request.getParameter("empemail");
 		ArrayList<String> emailList = employeeService.getEmployeeEmail();
-		if (emailList.contains(email)) {
+		if (employeeService.validateEmail(email)) {
 			EmployeeModel employee = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining, email);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
 			String messege = "Email is already Present ... Please enter unique email...";
 			request.setAttribute("messege", messege);
-			int id=employeeService.selectLatestIdFromEmployee();
-			request.setAttribute("latestId", id);
 			request.setAttribute("employee", employee);
 			dispatcher.forward(request, response);
 		} else {
@@ -143,23 +141,10 @@ public class EmployeeController extends HttpServlet{
 		String dateOfJoining = request.getParameter("empdoj");
 		String email = request.getParameter("empemail");
 		EmployeeModel employee = new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining, email);
-		ArrayList<String> emailList = employeeService.getEmployeeEmail();
-		String emailById = employeeService.getEmployeeEmailById(id);
-		emailList.remove(emailById);
-		if (emailList.contains(email)) {
-			String messege = "Existing Email...";
-			EmployeeModel selectedEmployee;
-			selectedEmployee = employeeService.getEmployeeById(id);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
-			request.setAttribute("employee", selectedEmployee);
-			request.setAttribute("messege", messege);
-			dispatcher.forward(request, response);
-		} else {
-			employeeService.updateEmployee(employee);
-			EmployeeModel empskills = new EmployeeModel(id, skills);
-			employeeService.updateEmployeeSkills(empskills);
-			response.sendRedirect("empList");
-		}
+		employeeService.updateEmployee(employee);
+		EmployeeModel empskills = new EmployeeModel(id, skills);
+		employeeService.updateEmployeeSkills(empskills);
+		response.sendRedirect("empList");
 	}
 
 	private void listEmployee(HttpServletRequest request, HttpServletResponse response) {

@@ -26,6 +26,8 @@ public interface EmployeeService {
 	
 	public int selectLatestIdFromEmployee();
 	
+	public boolean validateEmail(String email);
+	
 	//Methods For Employee_Skills Table=
 	public  LinkedHashSet<String> getEmployeeSkillsById(int id);
 	

@@ -26,10 +26,10 @@
 <body>
 <c:out value="${messege}">
 </c:out>
-	<c:if test="${employee.getId()<latestId || employee==null }">
+	<c:if test="${employee.getId()==0 || employee==null}">
 		<form action="<%=request.getContextPath() %>/insert" method="post">
 	</c:if>
-  	<c:if test="${employee!=null }"> 
+  	<c:if test="${employee.getId()!=0  &&  employee!=null}"> 
 		<form action="<%=request.getContextPath() %>/update" method="post">
  	</c:if> 
 	<div class="Form">
@@ -52,7 +52,15 @@
 		
 		Enter the Employee's Date of Joining : <input type="date" name="empdoj" value="${employee.getDoj()}" max=<%=java.time.LocalDate.now()%> required /><br /><br />
 		
+		 <c:if test="${employee.getId()==0 || employee==null}">
 		Enter the E-mail : <input type="email" name="empemail" 	value="${employee.getEmail()}" max="254" required/>	<br /><br />
+		<form action="<%=request.getContextPath() %>/insert" method="post">
+		</c:if>
+		 
+		 <c:if test="${employee.getId()!=0 && employee!=null}">
+		Enter the E-mail : <input type="email" name="empemail" 	value="${employee.getEmail()}" max="254" required readonly/>	<br /><br />
+		 <form action="<%=request.getContextPath() %>/update" method="post">
+ 		</c:if> 
 		
 		<input type="submit" name="submit" value="Submit" id="submit" required />
 		
