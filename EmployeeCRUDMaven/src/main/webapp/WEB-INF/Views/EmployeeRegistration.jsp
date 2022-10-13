@@ -32,6 +32,7 @@
 		<form action="<%=request.getContextPath() %>/update" method="post">
 	</c:if>
 	<div class="Form">
+	
 		<input type="hidden" name="empId" value="${employee.getId()}">
 		Enter the Employee Name : <input type="text" name="empfname"
 			placeholder="Enter the First Name" value="${employee.getFirstname()}"
@@ -61,7 +62,7 @@
 		<br /> <input type="submit" name="submit" value="Submit" id="submit"
 			required /> <input type="reset" name="reset" value="Reset" id="reset"
 			required /> &nbsp;&nbsp;&nbsp;&nbsp; <a
-			href="<%=request.getContextPath()%>/"><button type="button">List</button></a>
+			href="<%=request.getContextPath()%>/list"><button type="button">List</button></a>
 	</div>
 </body>
 </html>

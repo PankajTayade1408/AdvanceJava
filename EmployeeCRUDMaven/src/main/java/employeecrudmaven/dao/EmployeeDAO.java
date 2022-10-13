@@ -7,6 +7,7 @@ import employeecrudmaven.model.EmployeeModel;
 
 public interface EmployeeDAO {
 
+	// Queries for Employee1 Table
 	public static final String INSERT_EMPLOYEE_SQL = "INSERT INTO Employee1"
 			+ "(firstname,lastname,age,salary,doj)Values" + "(?,?,?,?,?)"; 
 
@@ -31,6 +32,7 @@ public interface EmployeeDAO {
 	
 	public static final String SELECT_ALL_EMPLOYEE_SKILLS_SQL="select * from employee_skills";
 	
+	
 	// Methods for Employee1 Table
 	public void insertEmployee(EmployeeModel employee);
 
@@ -48,5 +50,6 @@ public interface EmployeeDAO {
 	public void deleteEmployeeSkillsById(int id,LinkedHashSet<String> skills);
 
 	public  LinkedHashSet<String> getEmployeeSkillsById(int id);
+	
 
 }

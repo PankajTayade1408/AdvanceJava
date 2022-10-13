@@ -12,10 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import employeecrudmaven.model.EmployeeModel;
+import employeecrudmaven.model.LoginModel;
 import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.service.EmployeeServiceImpl;
 
-@WebServlet("/")
+@WebServlet("/list")
 public class EmployeeController extends HttpServlet {
 	EmployeeService employeeService = new EmployeeServiceImpl();
 
@@ -54,13 +55,14 @@ public class EmployeeController extends HttpServlet {
 				e.printStackTrace();
 			}
 			break;
-
-		default:
+			
+		case "/list":
 			listEmployee(request, response);
+			break;
+		default:
 			break;
 		}
 	}
-
 	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
@@ -101,6 +103,7 @@ public class EmployeeController extends HttpServlet {
 
 	private void showEditForm(HttpServletRequest request, HttpServletResponse response) {
 		int id = Integer.parseInt(request.getParameter("id"));
+		System.out.println("Employee Controller Edit");
 		EmployeeModel selectedEmployee;
 		try {
 			selectedEmployee = employeeService.getEmployeeById(id);
@@ -136,6 +139,7 @@ public class EmployeeController extends HttpServlet {
 
 	private void listEmployee(HttpServletRequest request, HttpServletResponse response) {
 		try {
+			System.out.println("Employee Controller List");
 			List<EmployeeModel> employeeList = employeeService.getAllEmployee();
 			request.setAttribute("empList", employeeList);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//index.jsp");

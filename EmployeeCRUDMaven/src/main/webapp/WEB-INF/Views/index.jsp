@@ -4,6 +4,8 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <body>
+	<c:out value="${messegeLogin}">
+	</c:out>
 	<h1>
 		<a href="<%=request.getContextPath()%>/new">Add Employee Detail's</a>
 	</h1>
