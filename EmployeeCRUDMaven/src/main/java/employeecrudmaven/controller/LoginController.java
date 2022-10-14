@@ -13,10 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import employeecrudmaven.dao.LoginDAO;
 import employeecrudmaven.dao.LoginDAOImpl;
-import employeecrudmaven.model.EmployeeModel;
 import employeecrudmaven.model.LoginModel;
-import employeecrudmaven.service.EmployeeService;
-import employeecrudmaven.service.EmployeeServiceImpl;
 import employeecrudmaven.service.LoginService;
 import employeecrudmaven.service.LoginServiceImpl;
 

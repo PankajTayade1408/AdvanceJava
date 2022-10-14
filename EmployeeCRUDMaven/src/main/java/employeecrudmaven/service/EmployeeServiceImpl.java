@@ -11,6 +11,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	EmployeeDAO employeeDAO = new EmployeeDAOImpl();
 	
 	public void insertEmployee(EmployeeModel employee) {
+		
 		employeeDAO.insertEmployee(employee);
 	}
 

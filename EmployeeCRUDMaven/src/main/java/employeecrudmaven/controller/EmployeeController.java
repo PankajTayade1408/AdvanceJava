@@ -15,7 +15,7 @@ import employeecrudmaven.model.EmployeeModel;
 import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.service.EmployeeServiceImpl;
 
-@WebServlet("/list") 
+@WebServlet("/list")
 public class EmployeeController extends HttpServlet {
 	EmployeeService employeeService = new EmployeeServiceImpl();
 
@@ -27,7 +27,6 @@ public class EmployeeController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getServletPath();
-		System.out.println("Action is "+action);
 		switch (action) {
 		case "/new":
 			showNewForm(request, response);
@@ -82,10 +81,17 @@ public class EmployeeController extends HttpServlet {
 		String employeeSkillsArray[] = new String[0];
 		String checkedEmployeeSkills = "";
 		LinkedHashSet<String> skills = new LinkedHashSet<String>();
-		employeeSkillsArray = request.getParameterValues("empSkills");
-		for (int i = 0; i < employeeSkillsArray.length; i++) {
-			checkedEmployeeSkills = employeeSkillsArray[i];
-			skills.add(checkedEmployeeSkills);
+		if (request.getParameterValues("empSkills") == null ) {
+			for (int i = 0; i < employeeSkillsArray.length; i++) {
+				checkedEmployeeSkills = employeeSkillsArray[i];
+				skills.add(checkedEmployeeSkills);
+			}
+		} else {
+			employeeSkillsArray = request.getParameterValues("empSkills");
+			for (int i = 0; i < employeeSkillsArray.length; i++) {
+				checkedEmployeeSkills = employeeSkillsArray[i];
+				skills.add(checkedEmployeeSkills);
+			}
 		}
 		String age = request.getParameter("empage");
 		String salary = request.getParameter("empsalary");
@@ -93,7 +99,6 @@ public class EmployeeController extends HttpServlet {
 		EmployeeModel employee = new EmployeeModel(firstName, lastName, age, salary, dateOfJoining);
 		employeeService.insertEmployee(employee);
 		employeeService.insertEmployeeSkillsById(employee.getId(), skills);
-		//response.sendRedirect("empList");
 		response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven/list");
 	}
 
@@ -103,7 +108,7 @@ public class EmployeeController extends HttpServlet {
 			int id = Integer.parseInt(request.getParameter("id"));
 			employeeService.deleteEmployee(id);
 			response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven/list");
-		//	response.sendRedirect("empList");
+			// response.sendRedirect("empList");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -142,13 +147,12 @@ public class EmployeeController extends HttpServlet {
 		employeeService.updateEmployee(employee);
 		EmployeeModel empskills = new EmployeeModel(id, skills);
 		employeeService.updateEmployeeSkills(empskills);
-	//	response.sendRedirect("empList");
+		// response.sendRedirect("empList");
 		response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven/list");
 	}
 
 	private void listEmployee(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			System.out.println("Employee Controller List");
 			List<EmployeeModel> employeeList = employeeService.getAllEmployee();
 			request.setAttribute("empList", employeeList);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//index.jsp");

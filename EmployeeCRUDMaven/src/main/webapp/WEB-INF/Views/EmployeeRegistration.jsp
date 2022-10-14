@@ -41,7 +41,7 @@
 			required /><br />
 		<br /> Enter the Employee Skills : <input type="checkbox"
 			name="empSkills" value="C"
-			${ employee.getSkills().contains("C")  ?"checked":""}>C <input
+			${employee.getSkills().contains("C")  ?"checked":""}>C <input
 			type="checkbox" name="empSkills" value="C++"
 			${employee.getSkills().contains("C++")  ?"checked":""}>C++ <input
 			type="checkbox" name="empSkills" value="JAVA"
