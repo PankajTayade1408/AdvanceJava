@@ -1,4 +1,4 @@
-  package employeecrudmaven.controller;
+package employeecrudmaven.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -12,17 +12,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import employeecrudmaven.model.EmployeeModel;
-import employeecrudmaven.model.LoginModel;
 import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.service.EmployeeServiceImpl;
 
-@WebServlet("/list")
+@WebServlet("/list") 
 public class EmployeeController extends HttpServlet {
 	EmployeeService employeeService = new EmployeeServiceImpl();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		doPost(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String action = request.getServletPath();
+		System.out.println("Action is "+action);
 		switch (action) {
 		case "/new":
 			showNewForm(request, response);
@@ -55,7 +60,7 @@ public class EmployeeController extends HttpServlet {
 				e.printStackTrace();
 			}
 			break;
-			
+
 		case "/list":
 			listEmployee(request, response);
 			break;
@@ -63,8 +68,9 @@ public class EmployeeController extends HttpServlet {
 			break;
 		}
 	}
+
 	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException{
+			throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
 		dispatcher.forward(request, response);
 	}
@@ -84,18 +90,20 @@ public class EmployeeController extends HttpServlet {
 		String age = request.getParameter("empage");
 		String salary = request.getParameter("empsalary");
 		String dateOfJoining = request.getParameter("empdoj");
-		EmployeeModel employee = new EmployeeModel(firstName, lastName,age, salary, dateOfJoining);
+		EmployeeModel employee = new EmployeeModel(firstName, lastName, age, salary, dateOfJoining);
 		employeeService.insertEmployee(employee);
 		employeeService.insertEmployeeSkillsById(employee.getId(), skills);
-		response.sendRedirect("empList");
-}
-	
+		//response.sendRedirect("empList");
+		response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven/list");
+	}
+
 	private void deleteEmployee(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException {
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			employeeService.deleteEmployee(id);
-			response.sendRedirect("empList");
+			response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven/list");
+		//	response.sendRedirect("empList");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -134,7 +142,8 @@ public class EmployeeController extends HttpServlet {
 		employeeService.updateEmployee(employee);
 		EmployeeModel empskills = new EmployeeModel(id, skills);
 		employeeService.updateEmployeeSkills(empskills);
-		response.sendRedirect("empList");
+	//	response.sendRedirect("empList");
+		response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven/list");
 	}
 
 	private void listEmployee(HttpServletRequest request, HttpServletResponse response) {
@@ -147,10 +156,5 @@ public class EmployeeController extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doGet(request, response);
 	}
 }

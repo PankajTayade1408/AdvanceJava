@@ -1,6 +1,7 @@
 package employeecrudmaven.controller;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -10,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import employeecrudmaven.dao.LoginDAO;
+import employeecrudmaven.dao.LoginDAOImpl;
 import employeecrudmaven.model.EmployeeModel;
 import employeecrudmaven.model.LoginModel;
 import employeecrudmaven.service.EmployeeService;
@@ -58,7 +61,9 @@ public class LoginController extends HttpServlet {
 
 		String usernameLogin = request.getParameter("Username");
 		String passwordLogin = request.getParameter("Password");
-		LoginModel loginModel = new LoginModel(usernameLogin, passwordLogin);
+		LinkedHashSet<String> passwordSet=new LinkedHashSet<String>();
+		LoginDAO loginDAO=new LoginDAOImpl();
+		passwordSet=loginDAO.getPassword();
 		if (usernameLogin != null && passwordLogin != null) {
 			if (employeeService.isUsernameExistsInDBForLogin(usernameLogin)) {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//Login.jsp");
@@ -72,18 +77,21 @@ public class LoginController extends HttpServlet {
 				request.setAttribute("messegeLogin", "Password is not exists...Enter the correct the Password");
 				dispatcher.forward(request, response);
 			} else {
+				LoginModel loginModel = new LoginModel(usernameLogin,passwordLogin);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/list");
+				request.setAttribute("password", passwordLogin);
+				request.setAttribute("passwordSet", passwordSet);
 				request.setAttribute("loginModel", loginModel);
 				request.setAttribute("messegeLogin", "Login Successfull");
 				dispatcher.forward(request, response);
 			}
 		}
+		
 		String action = request.getServletPath();
-		System.out.println("Action"+action);
-		if (action.equals("/newuser")) {
+		System.out.println("Action is (Login)"+action);
+		if (action.equals("/newuser") ) {
 			registration(request, response);
-		}
-			else {
+		}	else   {
 			loginEmployee(request, response);
 		}
 	}

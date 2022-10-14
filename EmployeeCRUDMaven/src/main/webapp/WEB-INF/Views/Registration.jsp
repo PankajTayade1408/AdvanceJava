@@ -32,7 +32,7 @@
     <c:out value="${messege}">
     </c:out>
     <div class="loginbody">
-		<form action="<%=request.getContextPath()%>/list" method="post">
+		<form action="<%=request.getContextPath()%>/" method="post">
 		Enter UserName :-
         <input type="text"  name="username"  value="${username}"required /><br /><br />
         <br />

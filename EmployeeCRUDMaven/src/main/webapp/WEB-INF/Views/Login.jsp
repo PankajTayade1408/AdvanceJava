@@ -24,24 +24,28 @@
     </style>
 </head>
 <body>
+<c:out value="${messege}">
+</c:out>
+<c:out value="${password}">
+</c:out>
 <c:out value="${messegeLogin}">
 </c:out>
-    	 <c:if test="${loginModel!=null && username!=null}">
+    <c:if test="${loginModel!=null}">
     	<form action="<%=request.getContextPath()%>/list" method="post">
-    	</c:if> 
-    	<c:if test="${loginModel==null && username==null}">
+    	</c:if>  
+    	<c:if test="${loginModel==null}">
 		<form action="<%=request.getContextPath()%>/" method="post">
-    	</c:if>
+    	</c:if>  
 		<center><h1>Login Employee</h1></center>
-    <div class="loginbody">
+  	    <div class="loginbody">
 		Enter UserName :-
         <input type="text" name="Username" value="${username}" required /><br /><br />
         <br />
-
         Enter Password :-
         <input type="password" name="Password"  required /><br /><br />
         <input type="submit" id="loginbutton"/><br /><br />
         <a href="<%=request.getContextPath()%>/newuser" id="newuser"> New User</a>
+  
         </form>
      </div>
 </body>
