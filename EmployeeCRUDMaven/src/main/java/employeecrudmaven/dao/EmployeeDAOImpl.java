@@ -195,4 +195,19 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		employeeDAOImpl.getEmployeeSkillsById(id);
 		employeeDAOImpl.deleteEmployeeSkillsById(id, skills);
 	}
+
+	public ArrayList<String> getEmployeeEmail() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getEmployeeEmailById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int selectLatestIdFromEmployee() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
