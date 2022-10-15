@@ -133,12 +133,24 @@ public class EmployeeController extends HttpServlet {
 		int id = Integer.parseInt(request.getParameter("empId"));
 		String firstName = request.getParameter("empfname");
 		String lastName = request.getParameter("emplname");
-		String employeeSkillsArray[] = request.getParameterValues("empSkills");
+		String employeeSkillsArray[] =new String[0];
 		String checkedEmployeeSkills = "";
 		LinkedHashSet<String> skills = new LinkedHashSet<String>();
-		for (int i = 0; i < employeeSkillsArray.length; i++) {
-			checkedEmployeeSkills = employeeSkillsArray[i];
-			skills.add(checkedEmployeeSkills);
+//		for (int i = 0; i < employeeSkillsArray.length; i++) {
+//			checkedEmployeeSkills = employeeSkillsArray[i];
+//			skills.add(checkedEmployeeSkills);
+//		}
+		if (request.getParameterValues("empSkills") == null ) {
+			for (int i = 0; i < employeeSkillsArray.length; i++) {
+				checkedEmployeeSkills = employeeSkillsArray[i];
+				skills.add(checkedEmployeeSkills);
+			}
+		} else {
+			employeeSkillsArray = request.getParameterValues("empSkills");
+			for (int i = 0; i < employeeSkillsArray.length; i++) {
+				checkedEmployeeSkills = employeeSkillsArray[i];
+				skills.add(checkedEmployeeSkills);
+			}
 		}
 		String age = request.getParameter("empage");
 		String salary = request.getParameter("empsalary");
