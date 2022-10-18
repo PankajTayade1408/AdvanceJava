@@ -21,12 +21,14 @@
     </style>
 </head>
 <body>
+<c:out value="${messege}">
+</c:out>
 <c:out value="${messegeLogin}">
 </c:out>
 		<form action="<%=request.getContextPath()%>/" method="post">
 		<center><h1>Login Employee</h1></center>
   	    <div class="loginbody">
-		
+		<input type="hidden" name="Id" > 
 		Enter UserName :-
         <input type="text" name="Username" value="${username}" required /><br /><br />
         <br />

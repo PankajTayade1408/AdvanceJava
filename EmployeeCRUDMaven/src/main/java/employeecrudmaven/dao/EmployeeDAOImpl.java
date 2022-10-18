@@ -18,6 +18,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			preparedstatementForInsert.setString(3, employee.getAge());
 			preparedstatementForInsert.setString(4, employee.getSalary());
 			preparedstatementForInsert.setString(5, employee.getDoj());
+			preparedstatementForInsert.setInt(6,employee.getLoginId());
 			preparedstatementForInsert.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -38,6 +39,23 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		}
 		return employeeId;
 	}
+	
+	public List<Integer> getLoginId() {
+		List<Integer> loginId=new ArrayList<Integer>();
+		try {
+			PreparedStatement preparedstatementForLoginId = connection
+					.prepareStatement(SELECT_ALL_LOGIN_ID_SQL);
+			ResultSet resultsetForLoginId = preparedstatementForLoginId.executeQuery();
+			while (resultsetForLoginId.next()) {
+			int logId = resultsetForLoginId.getInt("loginId");
+			loginId.add(logId);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return loginId;
+	}
 
 	public static int selectIdFromEmployee(int id)
 	{
@@ -55,6 +73,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		}
 		return employeeId;
 	}
+	
 	
 	public int insertEmployeeSkillsById(int id,LinkedHashSet<String> skills) {
 		try {
@@ -97,10 +116,11 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		return employee;
 	}
 
-	public List<EmployeeModel> getAllEmployee() {
+	public List<EmployeeModel> getAllEmployee(int loginId) {
 		List<EmployeeModel> employeeList = new ArrayList<EmployeeModel>();
 		try {
-			PreparedStatement preparestatementForGetAllEmployee = connection.prepareStatement(SELECT_ALL_EMPLOYEE);
+			PreparedStatement preparestatementForGetAllEmployee = connection.prepareStatement(SELECT_EMPLOYEE_BY_LOGIN_ID);
+			preparestatementForGetAllEmployee.setInt(1,loginId);
 			ResultSet resultsetForGetAllEmployee = preparestatementForGetAllEmployee.executeQuery();
 			while (resultsetForGetAllEmployee.next()) {
 				int id = resultsetForGetAllEmployee.getInt("id");
@@ -112,6 +132,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 				LinkedHashSet<String> skills = new LinkedHashSet<String>();
 				EmployeeDAOImpl employeeDAOImpl = new EmployeeDAOImpl(); 
 				skills = employeeDAOImpl.getEmployeeSkillsById(id);
+				System.out.println(skills);
 				employeeList.add(new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining));
 			}
 		} catch (Exception e) {
@@ -153,6 +174,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		try {PreparedStatement preparedstatementForGetSkillsById = connection
 					.prepareStatement(SELECT_EMPLOYEE_SKILL_BY_ID_SQL);
 			preparedstatementForGetSkillsById.setInt(1, id);
+			System.out.println(id);
 			ResultSet resultSetForGetSkillsById = preparedstatementForGetSkillsById.executeQuery();
 			LinkedHashSet<String> skillsFromBackEnd = new LinkedHashSet<String>();
 			while (resultSetForGetSkillsById.next()) {
@@ -160,6 +182,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 				skillsFromBackEnd.add(backEndSkills);
 				skills = (LinkedHashSet) skillsFromBackEnd.clone();
 			}
+		//	System.out.println(skills);
 			skillsFromBackEnd.clear();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -188,7 +211,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		EmployeeDAO employeeDAOImpl = new EmployeeDAOImpl();
 		employeeDAOImpl.insertEmployee(employee);
 		employeeDAOImpl.getEmployeeById(id);
-		employeeDAOImpl.getAllEmployee();
+		employeeDAOImpl.getAllEmployee(id);
 		employeeDAOImpl.deleteEmployee(id);
 		employeeDAOImpl.updateEmployee(employee);
 		employeeDAOImpl.insertEmployeeSkillsById(id,skills);

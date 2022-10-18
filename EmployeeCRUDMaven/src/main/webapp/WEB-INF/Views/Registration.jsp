@@ -30,7 +30,7 @@
     </c:out>
     <div class="registrationbody">
 		<form action="<%=request.getContextPath()%>/" method="post">
-		
+		<input type="hidden" name="Id" > 
 		Enter UserName :-
         <input type="text"  name="username"  value="${username}"required /><br /><br />
         <br />

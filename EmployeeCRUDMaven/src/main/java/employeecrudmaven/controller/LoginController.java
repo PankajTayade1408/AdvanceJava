@@ -22,53 +22,51 @@ public class LoginController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String confirmPassword = request.getParameter("confirmpassword");
-		LoginService employeeService = new LoginServiceImpl();
+		LoginService loginService = new LoginServiceImpl();
 		LoginModel registrationModel = new LoginModel(username, password);
-
 		if (username != null && password != null && confirmPassword != null) {
-			if (employeeService.isUsernameExistsInDB(username)) {
+			if (loginService.isUsernameExistsInDB(username)) {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//Registration.jsp");
 				request.setAttribute("messege", "Username is already Exists...");
 				request.setAttribute("username", username);
 				dispatcher.forward(request, response);
-			} else if (employeeService.isPasswordNotEqualsConfirmPassword(password, confirmPassword)) {
+			} else if (loginService.isPasswordNotEqualsConfirmPassword(password, confirmPassword)) {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//Registration.jsp");
 				request.setAttribute("messege",
 						"Entered Password and Confirmed Password are Not Same..Enter the Correct Password...");
 				request.setAttribute("username", username);
 				dispatcher.forward(request, response);
 			} else {
-				employeeService.insertLogin(registrationModel);
+				loginService.insertLogin(registrationModel);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//Login.jsp");
 				request.setAttribute("messege", "Registration Successfull");
 				dispatcher.forward(request, response);
 			}
 		}
-
+		
 		String usernameLogin = request.getParameter("Username");
 		String passwordLogin = request.getParameter("Password");
 		if (usernameLogin != null && passwordLogin != null) {
-			if (employeeService.isUsernameNotExistsInDBForLogin(usernameLogin)) {
+			if (loginService.isUsernameNotExistsInDBForLogin(usernameLogin)) {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//Login.jsp");
 				request.setAttribute("messegeLogin", "Username is not exists...Enter the correct the Username");
 				request.setAttribute("username", usernameLogin);
 				dispatcher.forward(request, response);
-			} else if (employeeService.isPasswordNotExistsInDBForLogin(passwordLogin)) {
+			} else if (loginService.isPasswordNotExistsInDBForLogin(passwordLogin)) {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//Login.jsp");
 				request.setAttribute("username", usernameLogin);
 				request.setAttribute("messegeLogin", "Password is not exists...Enter the correct the Password");
 				dispatcher.forward(request, response);
-			} else {
+			} 
+			else{
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/list");
 				request.setAttribute("messegeLogin", "Login Successfull");
 				dispatcher.forward(request, response);
 			}
 		}
-
 		String action = request.getServletPath();
 		if (action.equals("/newuser")) {
 			registration(request, response);
@@ -76,7 +74,6 @@ public class LoginController extends HttpServlet {
 			loginEmployee(request, response);
 		}
 	}
-
 	private void loginEmployee(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//Login.jsp");

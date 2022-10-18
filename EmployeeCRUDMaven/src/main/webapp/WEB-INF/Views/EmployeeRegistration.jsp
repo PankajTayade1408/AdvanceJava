@@ -33,7 +33,7 @@
 	</c:if>
 	<div class="Form">
 	
-		<input type="hidden" name="empId" value="${employee.getId()}">
+		<input type="hidden" name="id" value="${employee.getId()}">
 		Enter the Employee Name : <input type="text" name="empfname"
 			placeholder="Enter the First Name" value="${employee.getFirstname()}"
 			required /> <input type="text" name="emplname"
@@ -59,6 +59,7 @@
 		<br /> Enter the Employee's Date of Joining : <input type="date"
 			name="empdoj" value="${employee.getDoj()}"
 			max=<%=java.time.LocalDate.now()%> required /><br />
+			<input type="hidden" name="emploginId" value="${employee.getLoginId()}">
 		<br /> <input type="submit" name="submit" value="Submit" id="submit"
 			required /> <input type="reset" name="reset" value="Reset" id="reset"
 			required /> &nbsp;&nbsp;&nbsp;&nbsp; <a

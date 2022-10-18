@@ -19,5 +19,7 @@ public interface LoginService {
 	public LinkedHashSet<String> getUsername();
 
 	public void insertLogin(LoginModel registrationModel);
+
+	public int getId(String usernameLogin, String passwordLogin);
 	
 }

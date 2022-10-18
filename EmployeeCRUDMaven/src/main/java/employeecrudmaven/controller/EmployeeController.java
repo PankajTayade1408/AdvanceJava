@@ -10,9 +10,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import employeecrudmaven.dao.LoginDAOImpl;
 import employeecrudmaven.model.EmployeeModel;
+import employeecrudmaven.model.LoginModel;
 import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.service.EmployeeServiceImpl;
+import employeecrudmaven.service.LoginService;
+import employeecrudmaven.service.LoginServiceImpl;
 
 @WebServlet("/list")
 public class EmployeeController extends HttpServlet {
@@ -92,7 +96,8 @@ public class EmployeeController extends HttpServlet {
 		String age = request.getParameter("empage");
 		String salary = request.getParameter("empsalary");
 		String dateOfJoining = request.getParameter("empdoj");
-		EmployeeModel employee = new EmployeeModel(firstName, lastName, age, salary, dateOfJoining);
+		int loginId=LoginDAOImpl.getLatestId();
+		EmployeeModel employee = new EmployeeModel(firstName, lastName, age, salary, dateOfJoining,loginId);
 		employeeService.insertEmployee(employee);
 		employeeService.insertEmployeeSkillsById(employee.getId(), skills);
 		response.sendRedirect(request.getContextPath() + "/list");
@@ -124,7 +129,7 @@ public class EmployeeController extends HttpServlet {
 
 	private void updateEmployee(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException {
-		int id = Integer.parseInt(request.getParameter("empId"));
+		int id = Integer.parseInt(request.getParameter("id"));
 		String firstName = request.getParameter("empfname");
 		String lastName = request.getParameter("emplname");
 		String employeeSkillsArray[] = new String[0];
@@ -151,7 +156,12 @@ public class EmployeeController extends HttpServlet {
 
 	private void listEmployee(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			List<EmployeeModel> employeeList = employeeService.getAllEmployee();
+			String usernameLogin = request.getParameter("Username");
+			String passwordLogin = request.getParameter("Password");
+			LoginService loginService=new LoginServiceImpl();
+			int loginId=loginService.getId(usernameLogin, passwordLogin);
+			System.out.println(loginId);
+			List<EmployeeModel> employeeList = employeeService.getAllEmployee(loginId);
 			request.setAttribute("empList", employeeList);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//index.jsp");
 			dispatcher.forward(request, response);

@@ -10,15 +10,17 @@ public class EmployeeModel {
    private String age;
    private String salary;
    private  String dateOfJoining;
+   private int loginId;
    
-public EmployeeModel(int id, String firstName, String lastName, String age, String salary, String dateOfJoining) {
+public EmployeeModel( String firstName, String lastName, String age, String salary, String dateOfJoining,int loginId) {
 	super();
-	this.id = id;
+	
 	this.firstName = firstName;
 	this.lastName = lastName;                        
 	this.age = age;
 	this.salary = salary;
 	this.dateOfJoining = dateOfJoining;
+	this.loginId=loginId;
 }
 
 public EmployeeModel(int id, LinkedHashSet<String> skills) {
@@ -51,6 +53,15 @@ public EmployeeModel(int id, String firstName, String lastName, LinkedHashSet<St
 
 public EmployeeModel() {
 	
+}
+
+
+public int getLoginId() {
+	return loginId;
+}
+
+public void setLoginId(int loginId) {
+	this.loginId = loginId;
 }
 
 public int getId() {

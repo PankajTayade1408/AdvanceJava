@@ -41,7 +41,25 @@ public class LoginDAOImpl implements LoginDAO {
 		}
 		return passwordList;
 	}
-
+	
+	public static int getLatestId()
+	{
+		int latestId=0;
+		try
+		{
+			PreparedStatement preparedStatementGetLatestId=connection.prepareStatement(SELECT_LATEST_ID_SQL);
+			ResultSet resultSetGetLatestId=preparedStatementGetLatestId.executeQuery();
+			while(resultSetGetLatestId.next())
+			{
+			    latestId=resultSetGetLatestId.getInt("Login_Id");
+			}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return latestId;
+		
+	}
 	public LinkedHashSet<String> getUsername() {
 		LinkedHashSet<String> userNameList=new LinkedHashSet<String>();
 		try
@@ -61,5 +79,25 @@ public class LoginDAOImpl implements LoginDAO {
 		return userNameList;
 	}
 
+	public int  getId(String usernameLogin, String passwordLogin) {
+		int id=0;
+		try
+		{
 
+			PreparedStatement preparedStatementGetId=connection.prepareStatement(SELECT_ID_BY_USERNAME_PASSWORD_LOGIN_SQL);
+			preparedStatementGetId.setString(1, usernameLogin);
+			preparedStatementGetId.setString(2, passwordLogin);
+			ResultSet resultSetGetId=preparedStatementGetId.executeQuery();
+			while(resultSetGetId.next())
+			{
+				id=resultSetGetId.getInt("Login_Id");
+			}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return id;
+	}
+
+	
 }

@@ -13,9 +13,16 @@ public interface LoginDAO {
 	
 	public static final String INSERT_lOGIN_TABLE_SQL="Insert into Login"+"(Username,Password)Values"+"(?,?)";
 
-    public LinkedHashSet<String> getPassword();
+	public static final String SELECT_LATEST_ID_SQL="Select Login_Id from Login order by Login_Id desc limit 1";
+	
+	public static final String SELECT_ID_BY_USERNAME_PASSWORD_LOGIN_SQL="select Login_Id from Login where Username=? and Password=?";
+	
+	public LinkedHashSet<String> getPassword();
 	
 	public LinkedHashSet<String> getUsername();
 	
 	public void insertLogin(LoginModel loginModel);
+	
+	public int getId(String usernameLogin,String passwordLogin);
+
 }

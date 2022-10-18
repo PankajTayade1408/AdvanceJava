@@ -43,6 +43,9 @@ public class LoginServiceImpl implements LoginService {
 	public boolean isUsernameNotExistsInDBForLogin(String usernameLogin) {
 		LinkedHashSet<String> usernameSet = new LinkedHashSet<String>();
 		usernameSet = loginDAO.getUsername();
+		System.out.println(usernameSet);
+		System.out.println(usernameLogin);
+		System.out.println(usernameSet.contains(usernameLogin));
 		if (!usernameSet.contains(usernameLogin)) {
 			return true;
 		} else {
@@ -50,7 +53,6 @@ public class LoginServiceImpl implements LoginService {
 		}
 	}
 
-	@Override
 	public boolean isPasswordNotExistsInDBForLogin(String passwordLogin) {
 		LinkedHashSet<String> passwordSet = new LinkedHashSet<String>();
 		passwordSet = loginDAO.getPassword();
@@ -59,6 +61,11 @@ public class LoginServiceImpl implements LoginService {
 		} else {
 			return false;
 		}
+	}
+
+	public int getId(String usernameLogin, String passwordLogin) {
+		
+		return loginDAO.getId(usernameLogin, passwordLogin);
 	}
 	 
 }

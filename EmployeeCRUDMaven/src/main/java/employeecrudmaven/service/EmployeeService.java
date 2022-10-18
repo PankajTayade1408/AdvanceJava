@@ -13,7 +13,7 @@ public interface EmployeeService {
 	
 	public EmployeeModel getEmployeeById(int id);
     
-	public List<EmployeeModel> getAllEmployee();
+	public List<EmployeeModel> getAllEmployee(int loginId);
 	
 	public  boolean updateEmployee(EmployeeModel employee) throws SQLException;
 
