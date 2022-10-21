@@ -1,6 +1,6 @@
 package employeecrudmaven.service;
 
-import java.util.LinkedHashSet;
+import java.util.*;
 
 import employeecrudmaven.model.LoginModel;
 
@@ -12,14 +12,18 @@ public interface LoginService {
 
 	public boolean isUsernameNotExistsInDBForLogin(String usernameLogin);
 
-	public boolean isPasswordNotExistsInDBForLogin(String passwordLogin);
+	public int getIdForUserName(String usernameLogin);//
 
-	public LinkedHashSet<String> getPassword();
-
-	public LinkedHashSet<String> getUsername();
-
-	public void insertLogin(LoginModel registrationModel);
-
-	public int getId(String usernameLogin, String passwordLogin);
+	public LoginModel getUsername(String usrenameLogin);
 	
+	public boolean isPasswordNotExistsInDBForLogin(String usernameLogin, String passwordLogin);
+
+	public LinkedHashSet<String> getPassword();//
+
+	public LinkedHashSet<String> getUsername();//
+
+	public void insertLogin(LoginModel registrationModel);//
+
+	public int getId(String usernameLogin, String passwordLogin);//
+
 }

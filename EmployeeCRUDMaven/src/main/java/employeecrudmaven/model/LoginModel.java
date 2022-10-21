@@ -32,6 +32,8 @@ public LoginModel() {
 public LoginModel(int id) {
 	// TODO Auto-generated constructor stub
 }
+
+
 public int getId() {
 	return id;
 }

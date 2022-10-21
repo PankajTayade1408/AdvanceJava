@@ -4,12 +4,14 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <body>
+	
 	<c:out value="${messegeLogin}">
 	</c:out>
 	<h1>
 		<a href="<%=request.getContextPath()%>/new">Add Employee Detail's</a>
 	</h1>
 	<br>
+	<a href="<%=request.getContextPath()%>/logout">Log Out</a>
 	<br>
 	<h3>Employee Information</h3>
 	<table border="1" width="80%" padding="10px">

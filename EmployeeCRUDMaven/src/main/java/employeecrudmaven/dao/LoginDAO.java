@@ -17,9 +17,22 @@ public interface LoginDAO {
 	
 	public static final String SELECT_ID_BY_USERNAME_PASSWORD_LOGIN_SQL="select Login_Id from Login where Username=? and Password=?";
 	
+	public static final String SELECT_ID_BY_USERNAME_SQL="select Login_Id from Login where Username=?";
+	
+	public static final String SELECT_PASSWORD_BY_ID_SQL="select Password from Login  where Login_Id=?";
+	
+	public static final String SELECT_USERNAME_SQL="select * from Login where Username=?";
+	
+	public int getIdForUserName(String usernameLogin);
+	
 	public LinkedHashSet<String> getPassword();
 	
+	public String getPassword(int id);
+	
 	public LinkedHashSet<String> getUsername();
+	
+	public LoginModel getUsername(String usernameLogin);//
+	
 	
 	public void insertLogin(LoginModel loginModel);
 	

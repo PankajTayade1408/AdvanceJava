@@ -132,7 +132,6 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 				LinkedHashSet<String> skills = new LinkedHashSet<String>();
 				EmployeeDAOImpl employeeDAOImpl = new EmployeeDAOImpl(); 
 				skills = employeeDAOImpl.getEmployeeSkillsById(id);
-				System.out.println(skills);
 				employeeList.add(new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining));
 			}
 		} catch (Exception e) {
@@ -174,7 +173,6 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		try {PreparedStatement preparedstatementForGetSkillsById = connection
 					.prepareStatement(SELECT_EMPLOYEE_SKILL_BY_ID_SQL);
 			preparedstatementForGetSkillsById.setInt(1, id);
-			System.out.println(id);
 			ResultSet resultSetForGetSkillsById = preparedstatementForGetSkillsById.executeQuery();
 			LinkedHashSet<String> skillsFromBackEnd = new LinkedHashSet<String>();
 			while (resultSetForGetSkillsById.next()) {

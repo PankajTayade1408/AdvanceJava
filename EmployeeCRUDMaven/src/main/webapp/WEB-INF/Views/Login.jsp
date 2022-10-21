@@ -35,7 +35,7 @@
         
         Enter Password :-
         <input type="password" name="Password"  required /><br /><br />
-        <input type="submit" id="loginbutton"/>
+        <input type="submit" name="LogIn" id="loginbutton"/>
         
         <a href="<%=request.getContextPath()%>/newuser" id="newuser"> New User</a>
         </form>

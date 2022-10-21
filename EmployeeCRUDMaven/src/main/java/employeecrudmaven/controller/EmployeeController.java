@@ -1,4 +1,5 @@
 package employeecrudmaven.controller;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
@@ -6,9 +7,11 @@ import java.util.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import employeecrudmaven.dao.LoginDAOImpl;
 import employeecrudmaven.model.EmployeeModel;
@@ -79,28 +82,39 @@ public class EmployeeController extends HttpServlet {
 
 	private void insertNewEmployee(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException, ClassNotFoundException {
-		String firstName = request.getParameter("empfname");
-		String lastName = request.getParameter("emplname");
-		String employeeSkillsArray[] = new String[0];
-		String checkedEmployeeSkills = "";
-		LinkedHashSet<String> skills = new LinkedHashSet<String>();
-		if (request.getParameterValues("empSkills") == null) {
-			skills.add("");
-		} else {
-			employeeSkillsArray = request.getParameterValues("empSkills");
-			for (int i = 0; i < employeeSkillsArray.length; i++) {
-				checkedEmployeeSkills = employeeSkillsArray[i];
-				skills.add(checkedEmployeeSkills);
+
+		LoginService loginService = new LoginServiceImpl();
+		HttpSession session = request.getSession();
+		if (session != null) {
+			Integer loginId = (Integer) session.getAttribute("id");
+			String firstName = request.getParameter("empfname");
+			String lastName = request.getParameter("emplname");
+			String employeeSkillsArray[] = new String[0];
+			String checkedEmployeeSkills = "";
+			LinkedHashSet<String> skills = new LinkedHashSet<String>();
+			if (request.getParameterValues("empSkills") == null) {
+				skills.add("");
+			} else {
+				employeeSkillsArray = request.getParameterValues("empSkills");
+				for (int i = 0; i < employeeSkillsArray.length; i++) {
+					checkedEmployeeSkills = employeeSkillsArray[i];
+					skills.add(checkedEmployeeSkills);
+				}
 			}
+			String age = request.getParameter("empage");
+			String salary = request.getParameter("empsalary");
+			String dateOfJoining = request.getParameter("empdoj");
+			EmployeeModel employee = new EmployeeModel(firstName, lastName, age, salary, dateOfJoining, loginId);
+			employeeService.insertEmployee(employee);
+			employeeService.insertEmployeeSkillsById(employee.getId(), skills);
+			response.sendRedirect(request.getContextPath() + "/list");
 		}
-		String age = request.getParameter("empage");
-		String salary = request.getParameter("empsalary");
-		String dateOfJoining = request.getParameter("empdoj");
-		int loginId=LoginDAOImpl.getLatestId();
-		EmployeeModel employee = new EmployeeModel(firstName, lastName, age, salary, dateOfJoining,loginId);
-		employeeService.insertEmployee(employee);
-		employeeService.insertEmployeeSkillsById(employee.getId(), skills);
-		response.sendRedirect(request.getContextPath() + "/list");
+	}
+
+	private void logOut(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(false);
+		session.invalidate();
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/");
 	}
 
 	private void deleteEmployee(HttpServletRequest request, HttpServletResponse response)
@@ -156,15 +170,15 @@ public class EmployeeController extends HttpServlet {
 
 	private void listEmployee(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			String usernameLogin = request.getParameter("Username");
-			String passwordLogin = request.getParameter("Password");
-			LoginService loginService=new LoginServiceImpl();
-			int loginId=loginService.getId(usernameLogin, passwordLogin);
-			System.out.println(loginId);
-			List<EmployeeModel> employeeList = employeeService.getAllEmployee(loginId);
-			request.setAttribute("empList", employeeList);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//index.jsp");
-			dispatcher.forward(request, response);
+			LoginService loginService = new LoginServiceImpl();
+			HttpSession session = request.getSession();
+			if (session != null) {
+				Integer loginId = (Integer) session.getAttribute("id");
+				List<EmployeeModel> employeeList = employeeService.getAllEmployee(loginId);
+				request.setAttribute("empList", employeeList);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//index.jsp");
+				dispatcher.forward(request, response);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
