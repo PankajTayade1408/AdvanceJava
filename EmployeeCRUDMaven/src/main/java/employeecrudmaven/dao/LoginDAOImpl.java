@@ -95,6 +95,7 @@ public class LoginDAOImpl implements LoginDAO {
 			ResultSet resultSetGetId = preparedStatementGetId.executeQuery();
 			while (resultSetGetId.next()) {
 				id = resultSetGetId.getInt("Login_Id");
+				System.out.println("Id is "+id);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

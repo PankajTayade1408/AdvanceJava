@@ -34,8 +34,9 @@ public interface LoginDAO {
 	public LoginModel getUsername(String usernameLogin);//
 	
 	
+	
 	public void insertLogin(LoginModel loginModel);
 	
-	public int getId(String usernameLogin,String passwordLogin);
 
+	public int getId(String usernameLogin,String passwordLogin);
 }

@@ -7,7 +7,12 @@
 <title>Insert title here</title>
 </head>
 <body>
+<h1>Logout Page</h1>
 <%
+	response.setHeader("Cache-Control","no-cache,no-store,must-revalidate");
+	session.invalidate();
+	response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven/");
 %>
+
 </body>
 </html>

@@ -15,6 +15,10 @@
 	margin-left: 400px;
 }
 
+.required:After{
+  content:"*";
+  color:red;
+}
 #submit {
 	margin-left: 150px;
 }
@@ -34,12 +38,12 @@
 	<div class="Form">
 	
 		<input type="hidden" name="id" value="${employee.getId()}">
-		Enter the Employee Name : <input type="text" name="empfname"
-			placeholder="Enter the First Name" value="${employee.getFirstname()}"
+		 Employee Name <span style="color:red ; font-weight:bold">*</span> : <input type="text" name="empfname"
+			placeholder="Enter Your First Name" value="${employee.getFirstname()}"
 			required /> <input type="text" name="emplname"
-			placeholder="Enter the Last Name" value="${employee.getLastname()}"
+			placeholder="Enter Your Last Name" value="${employee.getLastname()}"
 			required /><br />
-		<br /> Enter the Employee Skills : <input type="checkbox"
+		<br /> Employee Skills : <input type="checkbox"
 			name="empSkills" value="C"
 			${employee.getSkills().contains("C")  ?"checked":""}>C <input
 			type="checkbox" name="empSkills" value="C++"
@@ -50,13 +54,12 @@
 			${employee.getSkills().contains("PYTHON")?"checked":""}>PYTHON
 		<input type="checkbox" name="empSkills" value="AWS"
 			${employee.getSkills().contains("AWS")?"checked":""}>AWS <br />
-		<br /> Enter the Employee Age : <input type="number" name="empage"
-			value="${employee.getAge()}" pattern="[A-Za-z]" min="20" max="60"
+		<br /> Employee Age <span style="color:red ; font-weight:bold">*</span> : <input type="number" name="empage"
+			value="${employee.getAge()}" pattern="[A-Za-z]" min="20" max="60" class="required"
 			required /><br />
-		<br /> Enter the Employee Salary : <input type="number"
-			name="empsalary" value="${employee.getSalary()}" min="20000"
-			max="90000" required /><br />
-		<br /> Enter the Employee's Date of Joining : <input type="date"
+		<br /> Employee Salary <span style="color:red ; font-weight:bold">*</span> : <input type="number"
+			name="empsalary" value="${employee.getSalary()} step="1" min="1"  required /><br />
+		<br /> Employee's Date of Joining <span style="color:red ; font-weight:bold">*</span> : <input type="date"
 			name="empdoj" value="${employee.getDoj()}"
 			max=<%=java.time.LocalDate.now()%> required /><br />
 			<input type="hidden" name="emploginId" value="${employee.getLoginId()}">

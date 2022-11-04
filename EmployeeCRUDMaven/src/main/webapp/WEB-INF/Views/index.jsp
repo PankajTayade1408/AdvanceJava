@@ -4,14 +4,33 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <body>
+	<style>
+	#logoutsection
+	{
+	 position:absolute;
+		right:20;
+		top:10;
+		font-size:20px; 
 	
+	}
+	#logout
+	{
+	position:absolute;
+	top:29;
+	left:9;
+	}
+	
+	</style>
 	<c:out value="${messegeLogin}">
 	</c:out>
 	<h1>
 		<a href="<%=request.getContextPath()%>/new">Add Employee Detail's</a>
 	</h1>
 	<br>
-	<a href="<%=request.getContextPath()%>/logout">Log Out</a>
+	<div id="logoutsection">
+	Hii <c:out value="${username}"></c:out>
+ 	<a href="<%=request.getContextPath()%>/logout" id="logout" >Logout</a>
+	</div>
 	<br>
 	<h3>Employee Information</h3>
 	<table border="1" width="80%" padding="10px">
@@ -31,22 +50,22 @@
 		%>
 		<c:forEach items="${empList}" var="e">		
 			<tr>
-				<td>
+				<td><center>
 				<%
 					count += 1;
 					out.print(count);
-				%>
+				%></center>
 				</td>
-				<td>${e.getFirstname()}</td>
-				<td>${e.getLastname()}</td>
-				<td>${e.getSkills()}</td>
-				<td>${e.getAge()}</td>
-				<td>${e.getSalary()}</td>
-				<td>${e.getDoj()}</td>
-				<td><a
-					 href="<%=request.getContextPath()%>/edit?id=${e.getId()}">Edit</a></td>
-				<td><a
-					href="<%=request.getContextPath()%>/delete?id=${e.getId()}">Delete</a></td>
+				<td><center>${e.getFirstname()}</center></td>
+				<td><center>${e.getLastname()}</center></td>
+				<td><center>${e.getSkills()}</center></td>
+				<td><center>${e.getAge()}</center></td>
+				<td><center>${e.getSalary()}</center></td>
+				<td><center>${e.getDoj()}</center></td>
+				<td><center><a
+					 href="<%=request.getContextPath()%>/edit?id=${e.getId()}">Edit</a></center></td>
+				<td><center><a
+					href="<%=request.getContextPath()%>/delete?id=${e.getId()}">Delete</a></center></td>
 			</tr>
 		</c:forEach>
 	</table>

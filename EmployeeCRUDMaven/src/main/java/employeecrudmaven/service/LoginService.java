@@ -9,7 +9,11 @@ public interface LoginService {
 	public boolean isPasswordNotEqualsConfirmPassword(String password, String confirmPassword);
 
 	public boolean isUsernameExistsInDB(String username);
-
+	
+	public boolean regexValidationForUsername(String username);
+	
+	public boolean regexValidationForPassword(String password);
+	
 	public boolean isUsernameNotExistsInDBForLogin(String usernameLogin);
 
 	public int getIdForUserName(String usernameLogin);//

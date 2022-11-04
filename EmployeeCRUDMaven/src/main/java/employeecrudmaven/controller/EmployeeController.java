@@ -24,7 +24,7 @@ import employeecrudmaven.service.LoginServiceImpl;
 @WebServlet("/list")
 public class EmployeeController extends HttpServlet {
 	EmployeeService employeeService = new EmployeeServiceImpl();
-
+	int count=0;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doPost(request, response);
@@ -76,17 +76,31 @@ public class EmployeeController extends HttpServlet {
 
 	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-		dispatcher.forward(request, response);
+		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
+		response.setDateHeader("Expire", 0);
+		System.out.println("New");
+		HttpSession session = request.getSession();
+		Integer loginId = (Integer) session.getAttribute("id");
+		System.out.println(loginId);
+		EmployeeModel employee=employeeService.getEmployeeById(loginId);
+		if (session != null && loginId!=null ) {
+			response.setDateHeader("Expire", 0);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
+			dispatcher.forward(request, response);
+			return;
+		}else {
+			response.sendRedirect("http://localhost:8080/");
+		}
 	}
 
 	private void insertNewEmployee(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException, ClassNotFoundException {
-
+		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
+		response.setDateHeader("Expire", 0);	
 		LoginService loginService = new LoginServiceImpl();
-		HttpSession session = request.getSession();
-		if (session != null) {
-			Integer loginId = (Integer) session.getAttribute("id");
+		HttpSession session = request.getSession(true);
+		Integer loginId = (Integer) session.getAttribute("id");
+		if (session != null ) {
 			String firstName = request.getParameter("empfname");
 			String lastName = request.getParameter("emplname");
 			String employeeSkillsArray[] = new String[0];
@@ -107,14 +121,10 @@ public class EmployeeController extends HttpServlet {
 			EmployeeModel employee = new EmployeeModel(firstName, lastName, age, salary, dateOfJoining, loginId);
 			employeeService.insertEmployee(employee);
 			employeeService.insertEmployeeSkillsById(employee.getId(), skills);
-			response.sendRedirect(request.getContextPath() + "/list");
+			response.sendRedirect(request.getContextPath()+"/list");
+			response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
+			response.setDateHeader("Expire", 0);	
 		}
-	}
-
-	private void logOut(HttpServletRequest request, HttpServletResponse response) {
-		HttpSession session = request.getSession(false);
-		session.invalidate();
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/");
 	}
 
 	private void deleteEmployee(HttpServletRequest request, HttpServletResponse response)
@@ -130,12 +140,20 @@ public class EmployeeController extends HttpServlet {
 
 	private void showEditForm(HttpServletRequest request, HttpServletResponse response) {
 		int id = Integer.parseInt(request.getParameter("id"));
+		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
+		response.setDateHeader("Expire", 0);
 		EmployeeModel selectedEmployee;
 		try {
+			HttpSession session = request.getSession();
+			Integer loginId = (Integer) session.getAttribute("id");
+			if (session != null && loginId != null) {
 			selectedEmployee = employeeService.getEmployeeById(id);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
 			request.setAttribute("employee", selectedEmployee);
 			dispatcher.forward(request, response);
+			}else {
+				response.sendRedirect("http://localhost:8080/");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -149,7 +167,7 @@ public class EmployeeController extends HttpServlet {
 		String employeeSkillsArray[] = new String[0];
 		String checkedEmployeeSkills = "";
 		LinkedHashSet<String> skills = new LinkedHashSet<String>();
-		if (request.getParameterValues("empSkills") == null) {
+		if (request.getParameterValues("empSkills") == null ) {
 			skills.add("");
 		} else {
 			employeeSkillsArray = request.getParameterValues("empSkills");
@@ -170,14 +188,20 @@ public class EmployeeController extends HttpServlet {
 
 	private void listEmployee(HttpServletRequest request, HttpServletResponse response) {
 		try {
+			response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
+			response.setDateHeader("Expire", 0);
 			LoginService loginService = new LoginServiceImpl();
-			HttpSession session = request.getSession();
-			if (session != null) {
-				Integer loginId = (Integer) session.getAttribute("id");
+			HttpSession session = request.getSession(true);
+			Integer loginId = (Integer) session.getAttribute("id");
+			if (session != null && loginId != null) {
 				List<EmployeeModel> employeeList = employeeService.getAllEmployee(loginId);
+				String username=(String) session.getAttribute("usernameLogin");
 				request.setAttribute("empList", employeeList);
+				request.setAttribute("username", username);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//index.jsp");
 				dispatcher.forward(request, response);
+			} else {
+				response.sendRedirect("http://localhost:8080/");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

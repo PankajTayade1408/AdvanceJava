@@ -19,6 +19,10 @@ public interface EmployeeService {
 
 	public  boolean deleteEmployee(int id) throws Exception;
 	
+	public boolean regexValidationForFirstName(String firstName);
+	
+	public boolean regexValidationForLastName(String lastName);
+	
 	//Methods For Employee_Skills Table=
 	public  LinkedHashSet<String> getEmployeeSkillsById(int id);
 	
