@@ -2,6 +2,7 @@ package employeecrudmaven.service;
 
 import java.util.*;
 
+import java.util.regex.*;
 import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.dao.EmployeeDAO;
 import employeecrudmaven.dao.EmployeeDAOImpl;
@@ -11,9 +12,12 @@ import employeecrudmaven.model.LoginModel;
 
 public class EmployeeServiceImpl implements EmployeeService {
 	EmployeeDAO employeeDAO = new EmployeeDAOImpl();
-
+	String regexForName = "([A-Z][a-z]*)";
+	String regexForSize = ".{3,}";
+	String regexForAge = "[2-7][0-9]|80";
+	String regexForSalary="[0-9]{1,10}(\\.[0-9]).{0,1}";
+	
 	public void insertEmployee(EmployeeModel employee) {
-
 		employeeDAO.insertEmployee(employee);
 	}
 
@@ -23,7 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	public List<EmployeeModel> getAllEmployee(int loginId) {
 		List<Integer> loginIdList = employeeDAO.getLoginId();
-		if (loginIdList.contains(loginId) ) {
+		if (loginIdList.contains(loginId)) {
 			return employeeDAO.getAllEmployee(loginId);
 		} else {
 			int lastestId = LoginDAOImpl.getLatestId();
@@ -88,5 +92,37 @@ public class EmployeeServiceImpl implements EmployeeService {
 			employeeDAO.insertEmployeeSkillsById(id, skills);
 		}
 		return id;
+	}
+
+	public boolean regexValidationForFirstName(String firstName) {
+		System.out.println("Condition "+(Pattern.matches(regexForName, firstName) && Pattern.matches(regexForSize, firstName)));
+		if ((Pattern.matches(regexForName, firstName) && Pattern.matches(regexForSize, firstName)) == false) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean regexValidationForLastName(String lastName) {
+		if ((Pattern.matches(regexForName, lastName) && Pattern.matches(regexForSize, lastName)) == false) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean regexValidationForAge(String age) {
+		if (Pattern.matches(regexForAge, age) == false) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean regexValidationForSalary(String salary) {
+		if(Pattern.matches(regexForSalary, salary)==false)
+		{
+			return true;
+		}
+		return false;
 	}
 }

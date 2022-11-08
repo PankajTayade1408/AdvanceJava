@@ -23,6 +23,9 @@ public interface EmployeeService {
 	
 	public boolean regexValidationForLastName(String lastName);
 	
+	public boolean regexValidationForAge(String age);
+	
+	public boolean regexValidationForSalary(String salary);
 	//Methods For Employee_Skills Table=
 	public  LinkedHashSet<String> getEmployeeSkillsById(int id);
 	
