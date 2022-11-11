@@ -5,8 +5,7 @@
 <%@ page import="java.util.*,java.text.*,java.time.*"%>
 <!DOCTYPE html>
 <html>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
@@ -17,18 +16,19 @@
 
 .nameMessege span
 {
-display:inline-block;
+display:inline;
 color:red;
-margin-left:131px;
+margin-left:132px;
 font-size:15px;
 }
 
-/*  #lastname
+ #lastname
 {
-margin-left:182px;
-font-size:14px;
+margin-left:315px;
+margin-top:-18px;
 color:red;
-}  */
+
+}  
 #age
 {
 margin-left:120px;
@@ -44,7 +44,12 @@ margin-left:135px;
 font-size:14px;
 color:red;
 }
-
+#doj
+{
+color:red;
+margin-left:200px;
+font-size:15px;
+}
 #submit {
 	margin-left: 150px;
 }
@@ -52,13 +57,22 @@ color:red;
 #reset {
 	margin-left: 30px;
 }
+#country
+{
+color:red;
+margin-left:140px;
+}
+select
+{
+margin-left:60px;
+}
 </style>
 </head>
 <body>
-	<c:if test="${employee==null}">
+	<c:if test="${employee==null || employee.getId()==0}">
 		<form action="<%=request.getContextPath() %>/insert" method="post">
 	</c:if>
-	<c:if test="${employee!=null }">
+	<c:if test="${employee!=null && employee.getId()!=null}">
 		<form action="<%=request.getContextPath() %>/update" method="post">
 	</c:if>
 	<div class="Form">
@@ -70,7 +84,9 @@ color:red;
 		<c:out value="${firstName}" >
 		</c:out>
 		</span>
+		</div>
 		<span>
+		<div id="lastname">
 		<c:out value="${lastName}">
 		</c:out>
 		</span>
@@ -86,7 +102,7 @@ color:red;
 			${employee.getSkills().contains("PYTHON")?"checked":""}>PYTHON
 		<input type="checkbox" name="empSkills" value="AWS"
 			${employee.getSkills().contains("AWS")?"checked":""}>AWS <br />
-		<br /> Employee Age <span style="color:red ; font-weight:bold">*</span> : <input type="number" name="empage"
+		<br /> Employee Age <span style="color:red ; font-weight:bold">*</span> : <input type="text" name="empage"
 			value="${employee.getAge()}"/><br />
 			<div id="age">
 			<c:out value="${age}">
@@ -97,11 +113,29 @@ color:red;
 			<div id="salary">
 			<c:out value="${salary}">
 			</c:out>
-			</div>
+			</div>  
+			<br/> <form><label>Country <span style="color:red ; font-weight:bold">*</span> :</label>	
+			 <select name="country">
+		     <option value="none" selected disabled hidden>Select Country</option> 
+		     <option value="India" ${employee.getCountry().contains("India")?"selected":""} >India</option>
+			 <option value="USA" ${employee.getCountry().contains("USA")  ?"selected":""} >USA</option>
+			 <option value="UK" ${employee.getCountry().contains("UK")  ?"selected":""} >UK</option>
+			 <option value="Africa" ${employee.getCountry().contains("Africa")  ?"selected":""}>Africa</option>
+			 <option value="New Zealand" ${employee.getCountry().contains("New Zealand") ?"selected":""}>New Zealand</option>
+			 <option value="Australia" ${employee.getCountry().contains("Australia") ?"selected":""}>Australia</option>
+			 </select>
+			 <div id="country">
+			 <c:out value="${country}">
+			 </c:out>
+			 </div>
+			</form>
 		<br /> Employee's Date of Joining <span style="color:red ; font-weight:bold">*</span> : <input type="date"
 			name="empdoj" value="${employee.getDoj()}"
 			max=<%=java.time.LocalDate.now()%> /><br />
-			<input type="hidden" name="emploginId" value="${employee.getLoginId()}"/>
+			<div id="doj">
+			<c:out value="${dateOfJoining}">
+			</c:out>
+			</div>
 		<br /> <input type="submit" name="submit" value="Submit" id="submit"
 			required /> <input type="reset" name="reset" value="Reset" id="reset"
 			required /> &nbsp;&nbsp;&nbsp;&nbsp; <a

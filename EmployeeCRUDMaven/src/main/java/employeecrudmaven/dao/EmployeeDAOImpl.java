@@ -18,7 +18,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			preparedstatementForInsert.setString(3, employee.getAge());
 			preparedstatementForInsert.setString(4, employee.getSalary());
 			preparedstatementForInsert.setString(5, employee.getDoj());
-			preparedstatementForInsert.setInt(6,employee.getLoginId());
+			preparedstatementForInsert.setString(6, employee.getCountry());
+			preparedstatementForInsert.setInt(7,employee.getLoginId());
 			preparedstatementForInsert.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -106,9 +107,10 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 				String age = resultSetForGetById.getString("age");
 				String salary = resultSetForGetById.getString("salary");
 				String dateOfJoining = resultSetForGetById.getString("doj");
+				String country=resultSetForGetById.getString("country");
 				LinkedHashSet<String> skills = new LinkedHashSet<String>();
 				skills = employeeDAOImpl.getEmployeeSkillsById(id);
-				employee = new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining);
+				employee = new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining,country);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,10 +131,11 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 				String age = resultsetForGetAllEmployee.getString("age");
 				String salary = resultsetForGetAllEmployee.getString("salary");
 				String dateOfJoining = resultsetForGetAllEmployee.getString("doj");
+				String country=resultsetForGetAllEmployee.getString("country");
 				LinkedHashSet<String> skills = new LinkedHashSet<String>();
 				EmployeeDAOImpl employeeDAOImpl = new EmployeeDAOImpl(); 
 				skills = employeeDAOImpl.getEmployeeSkillsById(id);
-				employeeList.add(new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining));
+				employeeList.add(new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining,country));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,7 +152,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			preparedstatementForUpdate.setString(3, employee.getAge());
 			preparedstatementForUpdate.setString(4, employee.getSalary());
 			preparedstatementForUpdate.setString(5, employee.getDoj());
-			preparedstatementForUpdate.setInt(6, employee.getId());
+			preparedstatementForUpdate.setString(6, employee.getCountry());
+			preparedstatementForUpdate.setInt(7, employee.getId());
 			udpatedEmployeeDetail = preparedstatementForUpdate.executeUpdate() > 0;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -180,7 +184,6 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 				skillsFromBackEnd.add(backEndSkills);
 				skills = (LinkedHashSet) skillsFromBackEnd.clone();
 			}
-		//	System.out.println(skills);
 			skillsFromBackEnd.clear();
 		} catch (Exception e) {
 			e.printStackTrace();

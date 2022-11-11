@@ -23,6 +23,8 @@ public interface LoginDAO {
 	
 	public static final String SELECT_USERNAME_SQL="select * from Login where Username=?";
 	
+	public static final String UPDATE_PASSWORD_SQL="update Login set Password=? where Username=?";
+	
 	public int getIdForUserName(String usernameLogin);
 	
 	public LinkedHashSet<String> getPassword();
@@ -31,12 +33,11 @@ public interface LoginDAO {
 	
 	public LinkedHashSet<String> getUsername();
 	
-	public LoginModel getUsername(String usernameLogin);//
-	
-	
+	public LoginModel getUsername(String usernameLogin);
 	
 	public void insertLogin(LoginModel loginModel);
-	
 
 	public int getId(String usernameLogin,String passwordLogin);
+
+	public void updatePassword(String username,String password);
 }

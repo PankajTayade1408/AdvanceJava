@@ -70,16 +70,15 @@
 		UserName :-
         <input type="text"  name="username"   value="${username}"required /><br /><br />
     	<div id="messege">
-    	<c:out value="${messege}" >
+    	<c:out value="${messege}">
   		</c:out>
   		</div>	
-        <br />
+        <br/>
        <div id="Password"> Password :-
         <input type="password" name="password" required /><br /><br /><br /></div>
         Confirm Password :-
         <input type="password" name="confirmpassword"  required /><br />
-       <div id="passwordMessege"><c:out value="${messegeForPassword}"></c:out></div>	
-       
+       <div id="passwordMessege"><c:out value="${messegeForPassword}"></c:out></div>
    	  	<div id="login">
        	<input type="submit" id="submitForm" value="Sign up"/>
    	  	<p>Already Registered?<a href="<%=request.getContextPath()%>/"> Log in</a></button></p>

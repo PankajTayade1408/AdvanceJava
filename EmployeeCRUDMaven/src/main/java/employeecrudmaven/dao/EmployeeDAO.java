@@ -9,7 +9,7 @@ public interface EmployeeDAO {
 
 	// Queries for Employee1 Table
 	public static final String INSERT_EMPLOYEE_SQL = "INSERT INTO Employee1"
-			+ "(firstname,lastname,age,salary,doj,loginId)Values" + "(?,?,?,?,?,?)"; 
+			+ "(firstname,lastname,age,salary,doj,country,loginId)Values" + "(?,?,?,?,?,?,?)"; 
 
 	public static final String SELECT_EMPLOYEE_BY_ID = "select * from Employee1 where id=?";
 
@@ -23,7 +23,7 @@ public interface EmployeeDAO {
 	
 	public static final String DELETE_EMPLOYEE_BY_ID = "delete from Employee1 where id=?"; 
 
-	public static final String UPDATE_EMPLOYEE_SQL = "update Employee1 set firstname=?,lastname=?,age=?,salary=?,doj=? where id=?"; 
+	public static final String UPDATE_EMPLOYEE_SQL = "update Employee1 set firstname=?,lastname=?,age=?,salary=?,doj=?,country=? where id=?"; 
 
 	public static final String SELECT_ALL_LOGIN_ID_SQL="select loginId from Employee1 ";
 	

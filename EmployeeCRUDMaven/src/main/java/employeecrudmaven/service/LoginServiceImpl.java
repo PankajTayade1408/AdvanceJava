@@ -1,8 +1,7 @@
 package employeecrudmaven.service;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
 import employeecrudmaven.dao.LoginDAO;
 import employeecrudmaven.dao.LoginDAOImpl;
@@ -94,6 +93,11 @@ public class LoginServiceImpl implements LoginService {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public void updatePassword(String username,String password) {
+		loginDAO.updatePassword(username,password);
 	}
 
 }

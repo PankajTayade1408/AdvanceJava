@@ -30,4 +30,6 @@ public interface LoginService {
 
 	public int getId(String usernameLogin, String passwordLogin);//
 
+	public void updatePassword(String username,String password);
+
 }

@@ -15,7 +15,6 @@ public class LoginDAOImpl implements LoginDAO {
 		try {
 			PreparedStatement preparedStatementUsername = connection.prepareStatement(INSERT_lOGIN_TABLE_SQL);
 			preparedStatementUsername.setString(1, loginModel.getUsername());
-
 			preparedStatementUsername.setString(2, loginModel.getPassword());
 			preparedStatementUsername.executeUpdate();
 		} catch (Exception e) {
@@ -25,7 +24,6 @@ public class LoginDAOImpl implements LoginDAO {
 
 	public LinkedHashSet<String> getPassword() {
 		LinkedHashSet<String> passwordList = new LinkedHashSet<String>();
-		System.out.println("LoginDAOImpl");
 		try {
 			PreparedStatement preparedStatementGetPassword = connection.prepareStatement(SELECT_ALL_PASSWORD_SQL);
 			ResultSet resultSetGetPassword = preparedStatementGetPassword.executeQuery();
@@ -95,22 +93,19 @@ public class LoginDAOImpl implements LoginDAO {
 			ResultSet resultSetGetId = preparedStatementGetId.executeQuery();
 			while (resultSetGetId.next()) {
 				id = resultSetGetId.getInt("Login_Id");
-				System.out.println("Id is "+id);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return id;
 	}
-	
+
 	public String getPassword(int id) {
-		String password="";
+		String password = "";
 		try {
 
-			PreparedStatement preparedStatementGetPasswordById = connection
-					.prepareStatement(SELECT_PASSWORD_BY_ID_SQL);
+			PreparedStatement preparedStatementGetPasswordById = connection.prepareStatement(SELECT_PASSWORD_BY_ID_SQL);
 			preparedStatementGetPasswordById.setInt(1, id);
-			
 			ResultSet resultSetGetPasswordById = preparedStatementGetPasswordById.executeQuery();
 			while (resultSetGetPasswordById.next()) {
 				password = resultSetGetPasswordById.getString("Password");
@@ -120,28 +115,38 @@ public class LoginDAOImpl implements LoginDAO {
 		}
 		return password;
 	}
-	
-	public LoginModel getUsername(String usernameLogin)
-	{
-		LoginModel loginModel=null;
-		try
-		{
-			PreparedStatement preparedStatementForUsername=connection.prepareStatement(SELECT_USERNAME_SQL);
-		    preparedStatementForUsername.setString(1, usernameLogin);
-		    ResultSet resultSetForUsername=preparedStatementForUsername.executeQuery();
-		    while(resultSetForUsername.next())
-		    {
-		    	int id=resultSetForUsername.getInt("Login_Id");
-		    	String username=resultSetForUsername.getString("Username");
-		    	String password=resultSetForUsername.getString("Password");
-		    	loginModel=new LoginModel(username,password,id);
-		    }
-		}
-		catch(Exception e)
-		{
+
+	public LoginModel getUsername(String usernameLogin) {
+		LoginModel loginModel = null;
+		try {
+			PreparedStatement preparedStatementForUsername = connection.prepareStatement(SELECT_USERNAME_SQL);
+			preparedStatementForUsername.setString(1, usernameLogin);
+			ResultSet resultSetForUsername = preparedStatementForUsername.executeQuery();
+			while (resultSetForUsername.next()) {
+				int id = resultSetForUsername.getInt("Login_Id");
+				String username = resultSetForUsername.getString("Username");
+				String password = resultSetForUsername.getString("Password");
+				loginModel = new LoginModel(username, password, id);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return loginModel;
 	}
 
+	@Override
+	public void updatePassword(String username,String password) {
+		try {
+			PreparedStatement preparedstatementForUpdatePassword = connection
+					.prepareStatement(UPDATE_PASSWORD_SQL);
+			preparedstatementForUpdatePassword.setString(1,password);	
+		preparedstatementForUpdatePassword.setString(2, username);
+		
+		preparedstatementForUpdatePassword.executeUpdate();
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
 }

@@ -11,7 +11,6 @@
 		right:20;
 		top:10;
 		font-size:20px; 
-	
 	}
 	#logout
 	{
@@ -41,6 +40,7 @@
 			<th>Skills</th>
 			<th>Age</th>
 			<th>Salary</th>
+			<th>Country</th>
 			<th>Date of Joining</th>
 			<th>Update</th>
 			<th>Delete</th>
@@ -61,6 +61,7 @@
 				<td><center>${e.getSkills()}</center></td>
 				<td><center>${e.getAge()}</center></td>
 				<td><center>${e.getSalary()}</center></td>
+				<td><center>${e.getCountry()}</center></td>
 				<td><center>${e.getDoj()}</center></td>
 				<td><center><a
 					 href="<%=request.getContextPath()%>/edit?id=${e.getId()}">Edit</a></center></td>

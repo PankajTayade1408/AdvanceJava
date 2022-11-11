@@ -14,9 +14,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	EmployeeDAO employeeDAO = new EmployeeDAOImpl();
 	String regexForName = "([A-Z][a-z]*)";
 	String regexForSize = ".{3,}";
-	String regexForAge = "[2-7][0-9]|80";
-	String regexForSalary="[0-9]{1,10}(\\.[0-9]).{0,1}";
-	
+	String regexForAge = "1[89]|[2-9][0-9]|100";
+	String regexForSalary = "([0-9]*[.][0-9]{2})";
+
 	public void insertEmployee(EmployeeModel employee) {
 		employeeDAO.insertEmployee(employee);
 	}
@@ -95,7 +95,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	public boolean regexValidationForFirstName(String firstName) {
-		System.out.println("Condition "+(Pattern.matches(regexForName, firstName) && Pattern.matches(regexForSize, firstName)));
 		if ((Pattern.matches(regexForName, firstName) && Pattern.matches(regexForSize, firstName)) == false) {
 			return true;
 		}
@@ -119,8 +118,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public boolean regexValidationForSalary(String salary) {
-		if(Pattern.matches(regexForSalary, salary)==false)
-		{
+		if (Pattern.matches(regexForSalary, salary) == false) {
 			return true;
 		}
 		return false;

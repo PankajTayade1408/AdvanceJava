@@ -10,12 +10,13 @@
       }
       #loginbutton
       {
-      	  margin-top:10px;
-          margin-left:70px;
+      	  margin-top:30px;
+          margin-left:100px;
       }
       #signin
       {
       margin-top:15px;
+      margin-left:30px;
       }
       #messegeLogin
       {
@@ -25,6 +26,13 @@
       {
       margin-top:10px;
       }
+      #forgetPassword a{
+      display:block;
+      margin-left:150px;
+      margin-top:-16px;
+      text-decoration:none;
+      }
+      
     </style>
 </head>
 <body>
@@ -48,8 +56,8 @@
         <br />
         Password <span style="color:red ; font-weight:bold">*</span>:-
         <input type="password" name="Password"  required /><br /><br />
+        <div id="forgetPassword"><a href="<%=request.getContextPath()%>/forgetPassword">Forget Password?</a></div>
         <input type="submit" name="LogIn" id="loginbutton" value="Login"/>
-        
      	<div id="signin">Don't have an Account?<a href="<%=request.getContextPath()%>/signin"> Sign up</a></div>
 		</div>
         </form>

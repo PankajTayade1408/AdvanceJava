@@ -10,9 +10,10 @@ public class EmployeeModel {
    private String age;
    private String salary;
    private  String dateOfJoining;
+   private String country;
    private int loginId;
    
-public EmployeeModel( String firstName, String lastName, String age, String salary, String dateOfJoining,int loginId) {
+public EmployeeModel( String firstName, String lastName, String age, String salary, String dateOfJoining,String country,int loginId) {
 	super();
 	
 	this.firstName = firstName;
@@ -20,6 +21,7 @@ public EmployeeModel( String firstName, String lastName, String age, String sala
 	this.age = age;
 	this.salary = salary;
 	this.dateOfJoining = dateOfJoining;
+	this.country=country;
 	this.loginId=loginId;
 }
 
@@ -40,7 +42,7 @@ public EmployeeModel(String firstName, String lastName, String age, String salar
 }
 
 public EmployeeModel(int id, String firstName, String lastName, LinkedHashSet<String> skills, String age, String salary,
-		String dateOfJoining) {
+		String dateOfJoining,String country) {
 	super();
 	this.id = id;
 	this.firstName = firstName;
@@ -49,10 +51,24 @@ public EmployeeModel(int id, String firstName, String lastName, LinkedHashSet<St
 	this.age = age;
 	this.salary = salary;
 	this.dateOfJoining = dateOfJoining;
+	this.country=country;
 }
 
 public EmployeeModel() {
 	
+}
+
+
+public EmployeeModel(String firstName, String lastName, LinkedHashSet<String> skills, String age, String salary,
+		String dateOfJoining,String country, Integer loginId) {
+	this.firstName=firstName;
+	this.lastName=lastName;
+	this.skills=skills;
+	this.age=age;
+	this.salary=salary;
+	this.dateOfJoining=dateOfJoining;
+	this.country=country;
+	this.loginId=loginId;
 }
 
 
@@ -118,6 +134,15 @@ public String getDoj() {
 public void setDateOfJoining(String dateOfJoining) {
 	this.dateOfJoining = dateOfJoining;
 }
+
+public String getCountry() {
+	return country;
+}
+
+public void setCountry(String country) {
+	this.country = country;
+}
+
 }
    
   
