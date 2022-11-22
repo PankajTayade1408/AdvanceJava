@@ -1,5 +1,6 @@
 package employeecrudmaven.model;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class EmployeeModel {
@@ -7,41 +8,19 @@ public class EmployeeModel {
    public String firstName;
    private String lastName;
    private LinkedHashSet<String>skills=new LinkedHashSet<String>();
-   private String age;
-   private String salary;
+   private int age;
+   private double salary;
    private  String dateOfJoining;
    private String country;
    private int loginId;
-   
-public EmployeeModel( String firstName, String lastName, String age, String salary, String dateOfJoining,String country,int loginId) {
-	super();
-	
-	this.firstName = firstName;
-	this.lastName = lastName;                        
-	this.age = age;
-	this.salary = salary;
-	this.dateOfJoining = dateOfJoining;
-	this.country=country;
-	this.loginId=loginId;
-}
 
-public EmployeeModel(int id, LinkedHashSet<String> skills) {
+   public EmployeeModel(int id, LinkedHashSet<String> skills) {
 	super();
 	this.id = id;                                  
 	this.skills = skills;
 }
 
-public EmployeeModel(String firstName, String lastName, String age, String salary,
-		String dateOfJoining) {
-	super();
-	this.firstName = firstName;
-	this.lastName = lastName;
-	this.age = age;
-	this.salary = salary;
-	this.dateOfJoining = dateOfJoining;
-}
-
-public EmployeeModel(int id, String firstName, String lastName, LinkedHashSet<String> skills, String age, String salary,
+public EmployeeModel(int id, String firstName, String lastName, LinkedHashSet<String> skills, int age, double salary,
 		String dateOfJoining,String country) {
 	super();
 	this.id = id;
@@ -54,23 +33,21 @@ public EmployeeModel(int id, String firstName, String lastName, LinkedHashSet<St
 	this.country=country;
 }
 
+public EmployeeModel(String firstName, String lastName, LinkedHashSet<String> skills, int age, double salary,
+		String dateOfJoining, String country, int loginId) {
+	super();
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.skills = skills;
+	this.age = age;
+	this.salary = salary;
+	this.dateOfJoining = dateOfJoining;
+	this.country = country;
+	this.loginId = loginId;
+}
+
 public EmployeeModel() {
-	
 }
-
-
-public EmployeeModel(String firstName, String lastName, LinkedHashSet<String> skills, String age, String salary,
-		String dateOfJoining,String country, Integer loginId) {
-	this.firstName=firstName;
-	this.lastName=lastName;
-	this.skills=skills;
-	this.age=age;
-	this.salary=salary;
-	this.dateOfJoining=dateOfJoining;
-	this.country=country;
-	this.loginId=loginId;
-}
-
 
 public int getLoginId() {
 	return loginId;
@@ -111,19 +88,19 @@ public void setSkills(LinkedHashSet<String> skills) {
 	this.skills = skills;
 }
 
-public String getAge() {
+public int getAge() {
 	return age;
 }
 
-public void setAge(String age) {
+public void setAge(int age) {
 	this.age = age;
 }
 
-public String getSalary() {
+public double getSalary() {
 	return salary;
 }
 
-public void setSalary(String salary) {
+public void setSalary(double salary) {
 	this.salary = salary;
 }
 

@@ -29,11 +29,6 @@ public LoginModel(String username, String password, int id) {
 public LoginModel() {
 }
 
-public LoginModel(int id) {
-	// TODO Auto-generated constructor stub
-}
-
-
 public int getId() {
 	return id;
 }

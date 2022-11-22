@@ -8,28 +8,22 @@ public interface LoginService {
 
 	public boolean isPasswordNotEqualsConfirmPassword(String password, String confirmPassword);
 
-	public boolean isUsernameExistsInDB(String username);
-	
 	public boolean regexValidationForUsername(String username);
-	
+
 	public boolean regexValidationForPassword(String password);
-	
-	public boolean isUsernameNotExistsInDBForLogin(String usernameLogin);
 
-	public int getIdForUserName(String usernameLogin);//
+	public boolean isUsernameNotExists(String username);
 
-	public LoginModel getUsername(String usrenameLogin);
-	
-	public boolean isPasswordNotExistsInDBForLogin(String usernameLogin, String passwordLogin);
+	public int getIdForUserName(String username);
 
-	public LinkedHashSet<String> getPassword();//
+	public LoginModel getUsername(String usenameLogin);
 
-	public LinkedHashSet<String> getUsername();//
+	public boolean isPasswordNotExists(String usernameLogin, String passwordLogin);
 
-	public void insertLogin(LoginModel registrationModel);//
+	public void insertLogin(LoginModel registrationModel);
 
-	public int getId(String usernameLogin, String passwordLogin);//
+	public int getId(String usernameLogin, String passwordLogin);
 
-	public void updatePassword(String username,String password);
+	public void updatePassword(String username, String password);
 
 }

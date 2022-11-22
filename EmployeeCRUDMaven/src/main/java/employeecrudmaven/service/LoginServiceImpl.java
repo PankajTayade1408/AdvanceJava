@@ -9,95 +9,70 @@ import employeecrudmaven.model.LoginModel;
 
 public class LoginServiceImpl implements LoginService {
 	LoginDAO loginDAO = new LoginDAOImpl();
-	public final String regexForUsername = "([a-zA-Z]+).{3,}";
+
+	public final String regexForUsername = "([a-zA-Z]{3,})*\\S";
 	public final String regexForPassword = "((?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[$&+,:;=?@#|'<>.-^*()%!]).{5,14})";
-	public final String regexForNoWhiteSpace="\\S*";
-	public final String regexForNonDigit="\\D*";
-	public LinkedHashSet<String> getPassword() {
-		return null;
-	}
-
-	public LinkedHashSet<String> getUsername() {
-		return null;
-	}
-
-	public void insertLogin(LoginModel registrationModel) {
+	public final String regexForNoWhiteSpace = "\\S*";	public void insertLogin(LoginModel registrationModel) {
 		loginDAO.insertLogin(registrationModel);
 	}
 
 	public boolean isPasswordNotEqualsConfirmPassword(String password, String confirmPassword) {
 		if (!password.equals(confirmPassword)) {
-			return true;
-		} else {
 			return false;
+		} else {
+			return true;
 		}
 	}
 
-	public boolean isUsernameExistsInDB(String username) {
-		LinkedHashSet<String> usernameSet = new LinkedHashSet<String>();
-		usernameSet = loginDAO.getUsername();
-		if (usernameSet.contains(username)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean isUsernameNotExistsInDBForLogin(String usernameLogin) {
-		LoginModel loginModel = loginDAO.getUsername(usernameLogin);
+	public boolean isUsernameNotExists(String username) {
+		LoginModel loginModel = loginDAO.getUsername(username);
 		if (loginModel == null) {
-			return true;
-		} else {
 			return false;
-		}
-
-	}
-
-	public boolean isPasswordNotExistsInDBForLogin(String usernameLogin, String passwordLogin) {
-		LoginModel loginModel = loginDAO.getUsername(usernameLogin);
-		LinkedHashSet<String> passwordSet = new LinkedHashSet<String>();
-		passwordSet = loginDAO.getPassword();
-		if (!passwordLogin.equals(loginModel.getPassword())) {
-			return true;
 		} else {
-			return false;
+			return true;
 		}
 	}
 
-	public int getIdForUserName(String usernameLogin) {
-		return loginDAO.getIdForUserName(usernameLogin);
+	public boolean isPasswordNotExists(String username, String password) {
+		LoginModel loginModel = loginDAO.getUsername(username);
+		if (loginModel==null) {
+			return false;
+		} else if(!loginModel.getPassword().equals(password)) {
+			return false;
+		}
+		return true;
 	}
 
-	public int getId(String usernameLogin, String passwordLogin) {
-		return loginDAO.getId(usernameLogin, passwordLogin);
+	public int getIdForUserName(String username) {
+		return loginDAO.getIdForUserName(username);
 	}
 
-	@Override
+	public int getId(String username, String password) {
+		return loginDAO.getId(username, password);
+	}
+
 	public LoginModel getUsername(String usrenameLogin) {
 		return null;
 	}
 
-	@Override
 	public boolean regexValidationForUsername(String username) {
-		if ((Pattern.matches(regexForUsername, username) && Pattern.matches(regexForNoWhiteSpace, username) && Pattern.matches(regexForNonDigit, username)) ==false) {
-			return true;
-		} else {
+		if (!Pattern.matches(regexForUsername, username)) {
 			return false;
+		} else {
+			return true;
 		}
 	}
 
-	@Override
 	public boolean regexValidationForPassword(String password) {
-		if ((Pattern.matches(regexForPassword, password)  && Pattern.matches(regexForNoWhiteSpace, password))==false) {
-			return true;
-		} else {
+		if (!(Pattern.matches(regexForPassword, password) && Pattern.matches(regexForNoWhiteSpace, password))) {
 			return false;
+		} else {
+			return true;
 		}
 	}
 
-	@Override
-	public void updatePassword(String username,String password) {
-		loginDAO.updatePassword(username,password);
+	public void updatePassword(String username, String password) {
+		loginDAO.updatePassword(username, password);
 	}
 
 }

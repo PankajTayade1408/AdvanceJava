@@ -2,8 +2,8 @@ package employeecrudmaven.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -76,12 +76,14 @@ public class EmployeeController extends HttpServlet {
 		response.setDateHeader("Expire", 0);
 		HttpSession session = request.getSession();
 		Integer loginId = (Integer) session.getAttribute("id");
-		if (session != null && loginId != null) {
+		session.removeAttribute("idForEdit");
+		if (loginId != null) {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
+			request.setAttribute("loginId", loginId);
 			dispatcher.forward(request, response);
 			return;
 		} else {
-			response.sendRedirect("http://localhost:8080/");
+			response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven");
 		}
 	}
 
@@ -89,700 +91,92 @@ public class EmployeeController extends HttpServlet {
 			throws IOException, SQLException, ClassNotFoundException, ServletException {
 		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
 		response.setDateHeader("Expire", 0);
-		HttpSession session = request.getSession(true);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
+		HttpSession session = request.getSession();
 		Integer loginId = (Integer) session.getAttribute("id");
-		if (session != null) {
-			String firstName = request.getParameter("empfname");
-			String lastName = request.getParameter("emplname");
-			String employeeSkillsArray[] = new String[0];
-			String checkedEmployeeSkills = "";
-			LinkedHashSet<String> skills = new LinkedHashSet<String>();
-			if (request.getParameterValues("empSkills") == null) {
-				skills.add("");
+		boolean flag = true;
+		String firstName = request.getParameter("empfname");
+		String lastName = request.getParameter("emplname");
+		String employeeAge = request.getParameter("empage");
+		String employeeSalary = request.getParameter("empsalary");
+		String country = request.getParameter("country");
+		String dateOfJoining = request.getParameter("empdoj");
+
+		String employeeSkills[] = new String[0];
+		String checkedSkills = "";
+		LinkedHashSet<String> skills = new LinkedHashSet<String>();
+		if (request.getParameterValues("empSkills") == null) {
+			skills.add("");
+		} else {
+			employeeSkills = request.getParameterValues("empSkills");
+			for (int i = 0; i < employeeSkills.length; i++) {
+				checkedSkills = employeeSkills[i];
+				skills.add(checkedSkills);
+			}
+		}
+
+		EmployeeModel employee = new EmployeeModel();
+		if (firstName != null && lastName != null) {
+			if (country == null) {
+				request.setAttribute("country", "Select the Country");
+				flag = false;
 			} else {
-				employeeSkillsArray = request.getParameterValues("empSkills");
-				for (int i = 0; i < employeeSkillsArray.length; i++) {
-					checkedEmployeeSkills = employeeSkillsArray[i];
-					skills.add(checkedEmployeeSkills);
-				}
+				employee.setCountry(country);
 			}
-			String age = request.getParameter("empage");
-			String employeeSalary = request.getParameter("empsalary");
-			String salary = "";
-			String country = request.getParameter("country");
-			if (employeeSalary.isEmpty()) {
-				salary = "";
+
+			if (dateOfJoining.isEmpty()) {
+				request.setAttribute("dateOfJoining", "Enter the Date Of Joining");
+				flag = false;
 			} else {
-				float floatSalary = Float.parseFloat(employeeSalary);
-				DecimalFormat decimalFormat = new DecimalFormat("0.00");
-				salary = decimalFormat.format(floatSalary);
+				employee.setDateOfJoining(dateOfJoining);
 			}
-			String dateOfJoining = request.getParameter("empdoj");
-			String invalidFirstName = "";
-			String invalidLastName = "";
-			String invalidAge = "";
-			String invalidSalary = "";
-			EmployeeModel employee = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining, country,
-					loginId);
-			if (firstName != null && lastName != null) {
-				if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) && dateOfJoining.isEmpty()
-						&& country == null) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) && country == null) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) && dateOfJoining.isEmpty()) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid salary");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary)) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid Salary");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age) && country == null
-						&& dateOfJoining.isEmpty()) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("country", "Please.Select the Country");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, invalidAge,
-							salary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age)) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("age", "Enter the valid Age");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, invalidAge,
-							salary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age) && country == null) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, invalidAge,
-							salary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForSalary(salary) && country == null
-						&& employee.getDoj().isEmpty()) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForSalary(salary) && country == null) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the country");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForSalary(salary)) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("salary", "Enter the valid Salary");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName) && country == null
-						&& employee.getDoj().isEmpty()) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("country", "Please.Select the country");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName) && country == null) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("country", "Please.Select the country");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName) && country == null
-						&& employee.getDoj().isEmpty()) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("country", "Please.Select the country");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForSalary(salary) && country == null
-						&& employee.getDoj().isEmpty()) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("salary", "Enter the valid salary");
-					request.setAttribute("country", "Please.Select the country");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, age, invalidSalary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName) && dateOfJoining.isEmpty()) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age,
-							salary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) && country == null
-						&& dateOfJoining.isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("invalidData", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) && country == null == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("invalidData", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid Salary");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForAge(age) && dateOfJoining.isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, invalidAge,
-							salary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForSalary(salary) && country == null
-						&& dateOfJoining.isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForSalary(salary) && country == null == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName) && country == null
-						&& dateOfJoining.isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("country", "Please.Select the Country");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName) && country == null == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName) && dateOfJoining.isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForAge(age) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("age", "Enter the valid Age");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, invalidAge,
-							salary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForSalary(salary) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("salary", "Enter the valid Salary");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) && country == null
-						&& dateOfJoining.isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) && country == null == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid Salary");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) && dateOfJoining.isEmpty()) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the Valid Salary");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age) && dateOfJoining.isEmpty()) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, invalidAge,
-							salary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForAge(age) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					request.setAttribute("age", "Enter the valid Age");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, invalidAge,
-							salary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForSalary(salary) && country == null
-						&& dateOfJoining.isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForSalary(salary) && country == null == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForLastName(lastName) && country == null
-						&& dateOfJoining.isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					request.setAttribute("country", "Please.Select the Country");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForLastName(lastName)
-						&& employeeService.regexValidationForSalary(salary) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					request.setAttribute("salary", "Enter the valid Salary");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForLastName(lastName) && dateOfJoining.isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForLastName(lastName) && country == null == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) && country == null
-						&& dateOfJoining.isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) && country == null) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForSalary(salary) && dateOfJoining.isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForAge(age) && country == null == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForAge(age)
-						&& employeeService.regexValidationForSalary(salary) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("salary", "Enter the valid Salary");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForAge(age) && employee.getDoj().isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("age", "Enter the valid Age");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if ((employeeService.regexValidationForSalary(salary) && country == null) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("salary", "Enter the valid Salary");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge,
-							invalidSalary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName)
-						&& employeeService.regexValidationForLastName(lastName) == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					request.setAttribute("lastName", "Enter the valid Last name");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age,
-							salary, dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (country == null && dateOfJoining.isEmpty() == true) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("country", "Please.Select the Country");
-					request.setAttribute("dateOfJoining", "Please.Select the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForFirstName(firstName)) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("firstName", "Enter the valid first name");
-					EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForLastName(lastName)) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("lastName", "Enter the valid last name");
-					EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForAge(age)) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("age", "Enter the valid Age");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (employeeService.regexValidationForSalary(salary)) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("salary", "Enter the valid Salary");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, age, invalidSalary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (country == null) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("country", "Please.Select the Country");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else if (dateOfJoining.isEmpty()) {
-					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-					request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-					EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, age, salary,
-							dateOfJoining, country, loginId);
-					request.setAttribute("employee", invalidData);
-					dispatcher.forward(request, response);
-					return;
-				} else {
-					employeeService.insertEmployee(employee);
-					employeeService.insertEmployeeSkillsById(employee.getId(), skills);
-					response.sendRedirect(request.getContextPath() + "/list");
-					return;
-				}
+
+			if (!employeeService.regexValidationForFirstName(firstName)) {
+				request.setAttribute("firstName", "Enter the Valid First Name");
+				flag = false;
+			} else {
+				employee.setFirstName(firstName);
 			}
-			response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
-			response.setDateHeader("Expire", 0);
+
+			if (!employeeService.regexValidationForLastName(lastName)) {
+				request.setAttribute("lastName", "Enter the Valid Last Name");
+				flag = false;
+			} else {
+				employee.setLastName(lastName);
+			}
+
+			if (!employeeService.regexValidationForAge(employeeAge)) {
+				request.setAttribute("age", "Enter the Valid Age");
+				flag = false;
+			} else {
+				int age = Integer.parseInt(employeeAge);
+				employee.setAge(age);
+			}
+			if (!employeeService.regexValidationSalary(employeeSalary)) {
+				request.setAttribute("salary", "Enter the Valid Salary");
+				flag = false;
+			} else {
+				double salary = Double.parseDouble(employeeSalary.replaceAll(",", ""));
+				employee.setSalary(salary);
+			}
+
+			employee.setSkills(skills);
+			request.setAttribute("employee", employee);
+
+			if (flag) {
+				double salary = Float.parseFloat(request.getParameter("empsalary"));
+				int age = Integer.parseInt(employeeAge);
+				EmployeeModel newEmployee = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining,
+						country, loginId);
+				employeeService.insertEmployee(newEmployee);
+				employeeService.insertEmployeeSkillsById(newEmployee.getId(), skills);
+				response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven/list");
+			} else {
+				dispatcher.forward(request, response);
+			}
+		} else {
+			dispatcher.forward(request, response);
+			return;
 		}
 	}
 
@@ -798,18 +192,19 @@ public class EmployeeController extends HttpServlet {
 	}
 
 	private void showEditForm(HttpServletRequest request, HttpServletResponse response) {
-		int id = Integer.parseInt(request.getParameter("id"));
+		int idForEdit = Integer.parseInt(request.getParameter("id"));
 		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
 		response.setDateHeader("Expire", 0);
-		EmployeeModel selectedEmployee;
+		EmployeeModel employee;
 		try {
 			HttpSession session = request.getSession();
+			session.setAttribute("idForEdit", idForEdit);
 			Integer loginId = (Integer) session.getAttribute("id");
 			if (session != null && loginId != null) {
-				selectedEmployee = employeeService.getEmployeeById(id);
+				employee = employeeService.getEmployeeById(idForEdit);
 				RequestDispatcher dispatcher = request
 						.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
-				request.setAttribute("employee", selectedEmployee);
+				request.setAttribute("employee", employee);
 				dispatcher.forward(request, response);
 			} else {
 				response.sendRedirect("http://localhost:8080/");
@@ -821,588 +216,99 @@ public class EmployeeController extends HttpServlet {
 
 	private void updateEmployee(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
-		int id = Integer.parseInt(request.getParameter("id"));
-		String firstName = request.getParameter("empfname");
-		String lastName = request.getParameter("emplname");
-		String employeeSkillsArray[] = new String[0];
-		String checkedEmployeeSkills = "";
-		LinkedHashSet<String> skills = new LinkedHashSet<String>();
-		if (request.getParameterValues("empSkills") == null) {
-			skills.add("");
-		} else {
-			employeeSkillsArray = request.getParameterValues("empSkills");
-			for (int i = 0; i < employeeSkillsArray.length; i++) {
-				checkedEmployeeSkills = employeeSkillsArray[i];
-				skills.add(checkedEmployeeSkills);
-			}
-		}
+		HttpSession session = request.getSession();
+		Integer loginId = (Integer) session.getAttribute("id");
+		if (session != null && loginId != null) {
+			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
+			Integer id = (Integer) session.getAttribute("idForEdit");
+			String firstName = request.getParameter("empfname");
+			String lastName = request.getParameter("emplname");
+			String employeeAge = request.getParameter("empage");
+			String employeeSalary = request.getParameter("empsalary");
+			String dateOfJoining = request.getParameter("empdoj");
+			String country = request.getParameter("country");
+			request.setAttribute("idForEdit", id);
+			EmployeeModel employee = new EmployeeModel();
+			boolean flag = true;
 
-		String age = request.getParameter("empage");
-		String employeeSalary = request.getParameter("empsalary");
-		String salary = "";
-		if (employeeSalary.isEmpty()) {
-			salary = "";
-		} else {
-			float floatSalary = Float.parseFloat(employeeSalary);
-			DecimalFormat decimalFormat = new DecimalFormat("0.00");
-			salary = decimalFormat.format(floatSalary);
-		}
-		String dateOfJoining = request.getParameter("empdoj");
-		String country = request.getParameter("country");
-		String invalidFirstName = "";
-		String invalidLastName = "";
-		String invalidAge = "";
-		String invalidSalary = "";
-		EmployeeModel employee = new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining,
-				country);
-		if ((employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForLastName(lastName) && employeeService.regexValidationForAge(age)
-				&& employeeService.regexValidationForSalary(salary) && dateOfJoining.isEmpty()
-				&& country == null) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("lastName", "Enter the valid Last name");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			request.setAttribute("country", "Please.Select the Country");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, invalidAge,
-					invalidSalary, dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForLastName(lastName) && employeeService.regexValidationForAge(age)
-				&& employeeService.regexValidationForSalary(salary) && country == null) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("lastName", "Enter the valid Last name");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, invalidAge,
-					invalidSalary, dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForLastName(lastName) && employeeService.regexValidationForAge(age)
-				&& employeeService.regexValidationForSalary(salary)) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("lastName", "Enter the valid Last name");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the valid Salary");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, invalidAge,
-					invalidSalary, dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForLastName(lastName)
-				&& employeeService.regexValidationForAge(age)) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("lastName", "Enter the valid Last name");
-			request.setAttribute("age", "Enter the valid Age");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, invalidAge, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForLastName(lastName)
-				&& employeeService.regexValidationForSalary(salary) && country == null
-				&& employee.getDoj().isEmpty()) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("lastName", "Enter the valid Last name");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, invalidAge,
-					invalidSalary, dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForLastName(lastName)
-				&& employeeService.regexValidationForSalary(salary) && country == null) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("lastName", "Enter the valid Last name");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the country");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForLastName(lastName)
-				&& employeeService.regexValidationForSalary(salary)) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("lastName", "Enter the valid Last name");
-			request.setAttribute("salary", "Enter the valid Salary");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForLastName(lastName) && country == null
-				&& employee.getDoj().isEmpty()) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("lastName", "Enter the valid Last name");
-			request.setAttribute("country", "Please.Select the country");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForLastName(lastName) && country == null) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("lastName", "Enter the valid Last name");
-			request.setAttribute("country", "Please.Select the country");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForFirstName(firstName) && country == null
-				&& employee.getDoj().isEmpty()) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("country", "Please.Select the country");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForSalary(salary) && country == null
-				&& employee.getDoj().isEmpty()) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("salary", "Enter the valid salary");
-			request.setAttribute("country", "Please.Select the country");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, age, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForLastName(lastName) && dateOfJoining.isEmpty()) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("lastName", "Enter the valid Last name");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName) && employeeService.regexValidationForAge(age)
-				&& employeeService.regexValidationForSalary(salary) && country == null
-				&& dateOfJoining.isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, invalidAge, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("invalidData", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName) && employeeService.regexValidationForAge(age)
-				&& employeeService.regexValidationForSalary(salary) && country == null == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, invalidAge, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("invalidData", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName) && employeeService.regexValidationForAge(age)
-				&& employeeService.regexValidationForSalary(salary) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the valid Salary");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, invalidAge, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName) && employeeService.regexValidationForAge(age)
-				&& dateOfJoining.isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, invalidAge, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForSalary(salary) && country == null
-				&& dateOfJoining.isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForSalary(salary) && country == null == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName) && country == null
-				&& dateOfJoining.isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("country", "Please.Select the Country");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName) && country == null == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("country", "Please.Select the Country");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName) && dateOfJoining.isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForAge(age) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("age", "Enter the valid Age");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, invalidAge, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForSalary(salary) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("salary", "Enter the valid Salary");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForLastName(lastName) && employeeService.regexValidationForAge(age)
-				&& employeeService.regexValidationForSalary(salary) && country == null
-				&& dateOfJoining.isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, invalidAge, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForLastName(lastName) && employeeService.regexValidationForAge(age)
-				&& employeeService.regexValidationForSalary(salary) && country == null == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, invalidAge, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForLastName(lastName) && employeeService.regexValidationForAge(age)
-				&& employeeService.regexValidationForSalary(salary) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the valid Salary");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, invalidAge, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForLastName(lastName) && employeeService.regexValidationForAge(age)
-				&& employeeService.regexValidationForSalary(salary) && dateOfJoining.isEmpty()) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the Valid Salary");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, invalidAge, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForLastName(lastName) && employeeService.regexValidationForAge(age)
-				&& dateOfJoining.isEmpty()) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, invalidAge, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForLastName(lastName)
-				&& employeeService.regexValidationForAge(age) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			request.setAttribute("age", "Enter the valid Age");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, invalidAge, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForLastName(lastName)
-				&& employeeService.regexValidationForSalary(salary) && country == null
-				&& dateOfJoining.isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForLastName(lastName)
-				&& employeeService.regexValidationForSalary(salary) && country == null == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForLastName(lastName) && country == null
-				&& dateOfJoining.isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			request.setAttribute("country", "Please.Select the Country");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForLastName(lastName)
-				&& employeeService.regexValidationForSalary(salary) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			request.setAttribute("salary", "Enter the valid Salary");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForLastName(lastName) && dateOfJoining.isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForLastName(lastName) && country == null == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			request.setAttribute("country", "Please.Select the Country");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForAge(age) && employeeService.regexValidationForSalary(salary)
-				&& country == null && dateOfJoining.isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForAge(age) && employeeService.regexValidationForSalary(salary)
-				&& country == null) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForSalary(salary) && dateOfJoining.isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining,
-					country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForAge(age) && country == null == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("country", "Please.Select the Country");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForAge(age)
-				&& employeeService.regexValidationForSalary(salary) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("salary", "Enter the valid Salary");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForAge(age) && employee.getDoj().isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("age", "Enter the valid Age");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if ((employeeService.regexValidationForSalary(salary) && country == null) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("salary", "Enter the valid Salary");
-			request.setAttribute("country", "Please.Select the Country");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName)
-				&& employeeService.regexValidationForLastName(lastName) == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			request.setAttribute("lastName", "Enter the valid Last name");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, invalidLastName, skills, age, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (country == null && dateOfJoining.isEmpty() == true) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("country", "Please.Select the Country");
-			request.setAttribute("dateOfJoining", "Please.Select the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining,
-					country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForFirstName(firstName)) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("firstName", "Enter the valid first name");
-			EmployeeModel invalidData = new EmployeeModel(invalidFirstName, lastName, skills, age, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForLastName(lastName)) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("lastName", "Enter the valid last name");
-			EmployeeModel invalidData = new EmployeeModel(firstName, invalidLastName, skills, age, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForAge(age)) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("age", "Enter the valid Age");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, invalidAge, salary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (employeeService.regexValidationForSalary(salary)) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("salary", "Enter the valid Salary");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, age, invalidSalary,
-					dateOfJoining, country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (country == null) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("country", "Please.Select the Country");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining,
-					country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else if (dateOfJoining.isEmpty()) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("dateOfJoining", "Please.Enter the Date of Joining");
-			EmployeeModel invalidData = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining,
-					country, id);
-			request.setAttribute("employee", invalidData);
-			dispatcher.forward(request, response);
-			return;
-		} else {
-			employeeService.updateEmployee(employee);
-			EmployeeModel empskills = new EmployeeModel(id, skills);
-			employeeService.updateEmployeeSkills(empskills);
-			response.sendRedirect(request.getContextPath() + "/list");
-			return;
+			if (firstName != null && lastName != null) {
+				String employeeSkills[] = new String[0];
+				String checkedSkills = "";
+				LinkedHashSet<String> skills = new LinkedHashSet<String>();
+
+				if (request.getParameterValues("empSkills") == null) {
+					skills.add("");
+				} else {
+					employeeSkills = request.getParameterValues("empSkills");
+					for (int i = 0; i < employeeSkills.length; i++) {
+						checkedSkills = employeeSkills[i];
+						skills.add(checkedSkills);
+					}
+					employee.setSkills(skills);
+				}
+
+				if (country == null) {
+					request.setAttribute("country", "Select the country");
+					flag = false;
+				} else {
+					employee.setCountry(country);
+				}
+
+				if (dateOfJoining.isEmpty()) {
+					request.setAttribute("dateOfJoining", "Enter the Date Of Joining");
+					flag = false;
+				} else {
+					employee.setDateOfJoining(dateOfJoining);
+				}
+
+				if (!employeeService.regexValidationForFirstName(firstName)) {
+					request.setAttribute("firstName", "Enter the Valid First Name");
+					flag = false;
+				} else {
+					employee.setFirstName(firstName);
+				}
+
+				if (!employeeService.regexValidationForLastName(lastName)) {
+					request.setAttribute("lastName", "Enter the Valid Last Name");
+				} else {
+					employee.setLastName(lastName);
+				}
+
+				if (!employeeService.regexValidationForAge(employeeAge)) {
+					request.setAttribute("age", "Enter the Valid Age");
+					flag = false;
+				} else {
+					int age = Integer.parseInt(employeeAge);
+					employee.setAge(age);
+				}
+
+				if (!employeeService.regexValidationSalary(employeeSalary)) {
+					request.setAttribute("salary", "Enter the Valid Salary");
+					flag = false;
+				} else {
+					double salary = Double.parseDouble(employeeSalary.replaceAll(",", ""));
+					employee.setSalary(salary);
+				}
+
+				request.setAttribute("employee", employee);
+
+				if (flag) {
+					double salary = Float.parseFloat(request.getParameter("empsalary").replaceAll(",", ""));
+					int age = Integer.parseInt(employeeAge);
+					EmployeeModel employeeforUpdate = new EmployeeModel(id, firstName, lastName, skills, age, salary,
+							dateOfJoining, country);
+					employeeService.updateEmployee(employeeforUpdate);
+					EmployeeModel empskills = new EmployeeModel(id, skills);
+					employeeService.updateEmployeeSkills(empskills);
+					response.sendRedirect(request.getContextPath() + "/list");
+					return;
+				} else {
+					dispatcher.forward(request, response);
+				}
+			} else {
+				dispatcher.forward(request, response);
+				return;
+			}
 		}
 	}
 
@@ -1412,7 +318,7 @@ public class EmployeeController extends HttpServlet {
 			response.setDateHeader("Expire", 0);
 			HttpSession session = request.getSession();
 			Integer loginId = (Integer) session.getAttribute("id");
-			if (session != null && loginId != null) {
+			if (loginId != null && session != null) {
 				List<EmployeeModel> employeeList = employeeService.getAllEmployee(loginId);
 				String username = (String) session.getAttribute("usernameLogin");
 				request.setAttribute("empList", employeeList);
@@ -1420,7 +326,7 @@ public class EmployeeController extends HttpServlet {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//index.jsp");
 				dispatcher.forward(request, response);
 			} else {
-				response.sendRedirect("http://localhost:8080/");
+				response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven/");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

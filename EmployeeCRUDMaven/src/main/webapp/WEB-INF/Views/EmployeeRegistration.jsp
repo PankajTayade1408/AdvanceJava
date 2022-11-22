@@ -5,51 +5,51 @@
 <%@ page import="java.util.*,java.text.*,java.time.*"%>
 <!DOCTYPE html>
 <html>
-<script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 <style>
-  .Form {
+.Form {
 	margin-left: 400px;
-} 
-
-.nameMessege span
-{
-display:inline;
-color:red;
-margin-left:132px;
-font-size:15px;
 }
 
- #lastname
-{
-margin-left:315px;
-margin-top:-18px;
-color:red;
+.nameMessege span {
+	display: inline;
+	color: red;
+	margin-left: 132px;
+	font-size: 15px;
+}
 
-}  
-#age
-{
-margin-left:120px;
-color:red;	
+#lastname {
+	margin-left: 315px;
+	margin-top: -18px;
+	color: red;
 }
-.required:After{
-  content:"*";
-  color:red;
+
+#age {
+	margin-left: 120px;
+	color: red;
 }
-#salary
-{
-margin-left:135px;
-font-size:14px;
-color:red;
+
+.required:After {
+	content: "*";
+	color: red;
 }
-#doj
-{
-color:red;
-margin-left:200px;
-font-size:15px;
+
+#salary {
+	margin-left: 135px;
+	font-size: 14px;
+	color: red;
 }
+
+#doj {
+	color: red;
+	margin-left: 200px;
+	font-size: 15px;
+}
+
 #submit {
 	margin-left: 150px;
 }
@@ -57,89 +57,110 @@ font-size:15px;
 #reset {
 	margin-left: 30px;
 }
-#country
-{
-color:red;
-margin-left:140px;
+
+#country {
+	color: red;
+	margin-left: 140px;
 }
-select
-{
-margin-left:60px;
+
+select {
+	margin-left: 60px;
 }
 </style>
 </head>
 <body>
-	<c:if test="${employee==null || employee.getId()==0}">
-		<form action="<%=request.getContextPath() %>/insert" method="post">
+	<c:if test="${employee==null || idForEdit==null}">
+		<form action="<%=request.getContextPath()%>/insert" method="post">
 	</c:if>
-	<c:if test="${employee!=null && employee.getId()!=null}">
-		<form action="<%=request.getContextPath() %>/update" method="post">
+	<c:if test="${employee!=null && idForEdit>0}">
+		<form action="<%=request.getContextPath()%>/update" method="post">
 	</c:if>
 	<div class="Form">
 		<input type="hidden" name="id" value="${employee.getId()}">
-		 Employee Name <span style="color:red ; font-weight:bold">*</span> : <input type="text" name="empfname"placeholder="Enter Your First Name" value="${employee.getFirstname()}" />
-		  <input type="text" name="emplname" placeholder="Enter Your Last Name" value="${employee.getLastname()}"/><br />
+		Employee Name <span style="color: red; font-weight: bold">*</span> : <input
+			type="text" name="empfname" placeholder="Enter Your First Name"
+			value="${employee.getFirstname()}" /> <input type="text"
+			name="emplname" placeholder="Enter Your Last Name"
+			value="${employee.getLastname()}" /><br />
 		<div class="nameMessege">
-		<span>
-		<c:out value="${firstName}" >
-		</c:out>
-		</span>
+			<span> <c:out value="${firstName}">
+				</c:out>
+			</span>
 		</div>
 		<span>
-		<div id="lastname">
-		<c:out value="${lastName}">
-		</c:out>
+			<div id="lastname">
+				<c:out value="${lastName}">
+				</c:out>
 		</span>
-		</div>
-		</br>Employee Skills : <input type="checkbox"
-			name="empSkills" value="C"
-			${employee.getSkills().contains("C")  ?"checked":""}>C <input
-			type="checkbox" name="empSkills" value="C++"
-			${employee.getSkills().contains("C++")  ?"checked":""}>C++ <input
-			type="checkbox" name="empSkills" value="JAVA"
-			${employee.getSkills().contains("JAVA")?"checked":""}>JAVA <input
-			type="checkbox" name="empSkills" value="PYTHON"
-			${employee.getSkills().contains("PYTHON")?"checked":""}>PYTHON
-		<input type="checkbox" name="empSkills" value="AWS"
-			${employee.getSkills().contains("AWS")?"checked":""}>AWS <br />
-		<br /> Employee Age <span style="color:red ; font-weight:bold">*</span> : <input type="text" name="empage"
-			value="${employee.getAge()}"/><br />
-			<div id="age">
-			<c:out value="${age}">
-			</c:out>
-			</div>
-		<br /> Employee Salary <span style="color:red ; font-weight:bold">*</span> : <input type="text"
-			name="empsalary" value="${employee.getSalary()}" /><br />
-			<div id="salary">
-			<c:out value="${salary}">
-			</c:out>
-			</div>  
-			<br/> <form><label>Country <span style="color:red ; font-weight:bold">*</span> :</label>	
-			 <select name="country">
-		     <option value="none" selected disabled hidden>Select Country</option> 
-		     <option value="India" ${employee.getCountry().contains("India")?"selected":""} >India</option>
-			 <option value="USA" ${employee.getCountry().contains("USA")  ?"selected":""} >USA</option>
-			 <option value="UK" ${employee.getCountry().contains("UK")  ?"selected":""} >UK</option>
-			 <option value="Africa" ${employee.getCountry().contains("Africa")  ?"selected":""}>Africa</option>
-			 <option value="New Zealand" ${employee.getCountry().contains("New Zealand") ?"selected":""}>New Zealand</option>
-			 <option value="Australia" ${employee.getCountry().contains("Australia") ?"selected":""}>Australia</option>
-			 </select>
-			 <div id="country">
-			 <c:out value="${country}">
-			 </c:out>
-			 </div>
-			</form>
-		<br /> Employee's Date of Joining <span style="color:red ; font-weight:bold">*</span> : <input type="date"
-			name="empdoj" value="${employee.getDoj()}"
-			max=<%=java.time.LocalDate.now()%> /><br />
-			<div id="doj">
-			<c:out value="${dateOfJoining}">
-			</c:out>
-			</div>
-		<br /> <input type="submit" name="submit" value="Submit" id="submit"
-			required /> <input type="reset" name="reset" value="Reset" id="reset"
-			required /> &nbsp;&nbsp;&nbsp;&nbsp; <a
-			href="<%=request.getContextPath()%>/list"><button type="button">List</button></a>
 	</div>
+	</br>Employee Skills :
+	<input type="checkbox" name="empSkills" value="C"
+		${employee.getSkills().contains("C")  ?"checked":""}>C
+	<input type="checkbox" name="empSkills" value="C++"
+		${employee.getSkills().contains("C++")  ?"checked":""}>C++
+	<input type="checkbox" name="empSkills" value="JAVA"
+		${employee.getSkills().contains("JAVA")?"checked":""}>JAVA
+	<input type="checkbox" name="empSkills" value="PYTHON"
+		${employee.getSkills().contains("PYTHON")?"checked":""}>PYTHON
+	<input type="checkbox" name="empSkills" value="AWS"
+		${employee.getSkills().contains("AWS")?"checked":""}>AWS
+	<br />
+	<br /> Employee Age
+	<span style="color: red; font-weight: bold">*</span> :
+	<input type="text" name="empage" value="${employee.getAge()}" />
+	<br />
+	<div id="age">
+		<c:out value="${age}">
+		</c:out>
+	</div>
+	<br /> Employee Salary
+	<span style="color: red; font-weight: bold">*</span> :
+	<input type="text" name="empsalary" value="<fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${employee.getSalary()}"/>"/>
+	<br />
+	<div id="salary">
+		<c:out value="${salary}">
+		</c:out>
+	</div>
+	<br />
+	<form>
+		<label>Country <span style="color: red; font-weight: bold">*</span>
+			:
+		</label> <select name="country">
+			<option value="none" selected disabled hidden>Select Country</option>
+			<option value="India"
+				${employee.getCountry().contains("India")?"selected":""}>India</option>
+			<option value="USA"
+				${employee.getCountry().contains("USA")  ?"selected":""}>USA</option>
+			<option value="UK"
+				${employee.getCountry().contains("UK")  ?"selected":""}>UK</option>
+			<option value="Africa"
+				${employee.getCountry().contains("Africa")  ?"selected":""}>Africa</option>
+			<option value="New Zealand"
+				${employee.getCountry().contains("New Zealand") ?"selected":""}>New
+				Zealand</option>
+			<option value="Australia"
+				${employee.getCountry().contains("Australia") ?"selected":""}>Australia</option>
+		</select>
+		<div id="country">
+			<c:out value="${country}">
+			</c:out>
+		</div>
+	</form>
+	<br /> Employee's Date of Joining
+	<span style="color: red; font-weight: bold">*</span> :
+	<input type="date" name="empdoj" value="${employee.getDoj()}"
+		max=<%=java.time.LocalDate.now()%> />
+	<br />
+	<div id="doj">
+		<c:out value="${dateOfJoining}">
+		</c:out>
+	</div>
+	<br />
+	<input type="submit" name="submit" value="Submit" id="submit" required />
+	<input type="reset" name="reset" value="Reset" id="reset" required />
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<a href="<%=request.getContextPath()%>/list"><button type="button">List</button></a>
+	</div>
+	</form>
 </body>
 </html>

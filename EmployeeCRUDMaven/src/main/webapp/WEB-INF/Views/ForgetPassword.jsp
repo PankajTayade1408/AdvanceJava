@@ -28,6 +28,12 @@ margin-left:80px;
 color:red;
 font-size:15px;
 }
+#confirmPasswordMessege
+{
+margin-left:140px;
+color:red;
+font-size:15px;
+}
 h1
 {
 margin-left:30px;
@@ -38,7 +44,7 @@ margin-top:-30px;
 <body> 
 <div class="formBody">
 		<h1>Reset Password</h1>
-		<form action="<%=request.getContextPath()%>/" method="post">
+		<form action="<%=request.getContextPath()%>/forgetPassword" method="post">
 		UserName :-
         <input type="text"  name="usernameForgetPass" value="${username}"/><br /><br />
     	<div id="messege">
@@ -47,10 +53,11 @@ margin-top:-30px;
   		</div>	
         <br/><br/>
        <div id="Password"> Password :-
-        <input type="password" name="passwordForgetPass" /></div>
+        <input type="password" name="passwordForgetPass" value="${password}" /></div>
        <div id="passwordMessege"><c:out value="${messegeForPassword}"></c:out><br/><br/><br/></div>
         Confirm Password :-
-        <input type="password" name="confirmpasswordForgetPass" /><br />
+        <input type="password" name="confirmpasswordForgetPass" value="${confirmPassword}" /><br />
+        <div id="confirmPasswordMessege"><c:out value="${messegeForConfirmPassword}"></c:out><br/><br/><br/></div>
    	  	<div id="login">
        	<input type="submit" id="submitForm" value="Submit"/>
         </div>

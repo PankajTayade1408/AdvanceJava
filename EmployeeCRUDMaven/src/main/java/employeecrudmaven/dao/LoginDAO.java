@@ -5,11 +5,10 @@ import java.util.*;
 import employeecrudmaven.model.LoginModel;
 
 public interface LoginDAO {
+	
 	public static final String SELECT_ALL_USERNAMES_SQL="select Username from Login";
 	
 	public static final String SELECT_ALL_PASSWORD_SQL="select Password from Login";
-	
-	public static final String SELECT_ALL_FROM_LOGIN_SQL="select * from Login";
 	
 	public static final String INSERT_lOGIN_TABLE_SQL="Insert into Login"+"(Username,Password)Values"+"(?,?)";
 
@@ -21,23 +20,20 @@ public interface LoginDAO {
 	
 	public static final String SELECT_PASSWORD_BY_ID_SQL="select Password from Login  where Login_Id=?";
 	
-	public static final String SELECT_USERNAME_SQL="select * from Login where Username=?";
+	public static final String SELECT_USERNAME_SQL="select * from Login where BINARY Username=?";
 	
 	public static final String UPDATE_PASSWORD_SQL="update Login set Password=? where Username=?";
 	
-	public int getIdForUserName(String usernameLogin);
-	
-	public LinkedHashSet<String> getPassword();
+    public int getIdForUserName(String usernameLogin);
 	
 	public String getPassword(int id);
 	
-	public LinkedHashSet<String> getUsername();
-	
-	public LoginModel getUsername(String usernameLogin);
+	public LoginModel getUsername(String username);
 	
 	public void insertLogin(LoginModel loginModel);
 
-	public int getId(String usernameLogin,String passwordLogin);
+	public int getId(String usernameLogin,String password);
 
 	public void updatePassword(String username,String password);
+	
 }

@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="employeecrudmaven.model.EmployeeModel.*"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <body>
 	<style>
 	#logoutsection
 	{
-	 position:absolute;
+	 	position:absolute;
 		right:20;
 		top:10;
 		font-size:20px; 
@@ -18,7 +19,6 @@
 	top:29;
 	left:9;
 	}
-	
 	</style>
 	<c:out value="${messegeLogin}">
 	</c:out>
@@ -60,7 +60,7 @@
 				<td><center>${e.getLastname()}</center></td>
 				<td><center>${e.getSkills()}</center></td>
 				<td><center>${e.getAge()}</center></td>
-				<td><center>${e.getSalary()}</center></td>
+				<td><center><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${e.getSalary()}"/></center></td>
 				<td><center>${e.getCountry()}</center></td>
 				<td><center>${e.getDoj()}</center></td>
 				<td><center><a
