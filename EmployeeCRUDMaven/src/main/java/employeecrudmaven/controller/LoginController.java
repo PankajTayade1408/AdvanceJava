@@ -162,7 +162,7 @@ public class LoginController extends HttpServlet {
 				request.setAttribute("messegeForConfirmPassword", "Enter the Confirm Password");
 				flag = false;
 			}
-			if (!loginService.isUsernameNotExists(username)) {
+			if (loginService.isUsernameNotExists(username)) {
 				request.setAttribute("username", username);
 				request.setAttribute("messege", "Username is already Present");
 				flag = false;

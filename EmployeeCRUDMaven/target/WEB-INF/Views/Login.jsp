@@ -75,7 +75,7 @@ color:red;
 					<c:out value="${messegeUsername}"></c:out>
 				</div>
 				<br /> Password <span style="color: red; font-weight: bold">*</span>:-
-				<input type="password" name="Password" /><br />
+				<input type="password" name="Password" value="${password}" /><br />
 				<br />
 				<div id="messegePassword">
 					<c:out value="${messegePassword}"></c:out>

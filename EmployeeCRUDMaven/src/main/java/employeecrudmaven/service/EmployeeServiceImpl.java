@@ -1,5 +1,7 @@
 package employeecrudmaven.service;
 
+import java.io.FileInputStream;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.*;
 import employeecrudmaven.service.EmployeeService;
@@ -15,8 +17,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	String regexForAge = "1[89]|[2-9][0-9]|100";
 	String regexForSalary = "([+]?\\d\\.?\\d*.?\\S*)(?=.*[^a-zA-Z])[^!@#%^&*?>']";
 
-	public void insertEmployee(EmployeeModel employee) {
-		employeeDAO.insertEmployee(employee);
+	public void insertEmployee(EmployeeModel employee, FileInputStream fileInputStream) {
+		employeeDAO.insertEmployee(employee, fileInputStream);
 	}
 
 	public EmployeeModel getEmployeeById(int id) {
@@ -24,17 +26,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	public List<EmployeeModel> getAllEmployee(int loginId) {
-		List<Integer> loginIdList = employeeDAO.getLoginId();
-		if (loginIdList.contains(loginId)) {
-			return employeeDAO.getAllEmployee(loginId);
-		} else {
-			int lastestId = LoginDAOImpl.getLatestId();
-			return employeeDAO.getAllEmployee(lastestId);
-		}
+		return employeeDAO.getAllEmployee(loginId);
 	}
 
-	public boolean updateEmployee(EmployeeModel employee) {
-		return employeeDAO.updateEmployee(employee);
+	public boolean updateEmployee(EmployeeModel employee, FileInputStream fileInputStream) {
+		return employeeDAO.updateEmployee(employee, fileInputStream);
 	}
 
 	public boolean deleteEmployee(int id) throws Exception {
@@ -119,4 +115,5 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		return false;
 	}
+
 }

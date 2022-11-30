@@ -1,6 +1,5 @@
 package employeecrudmaven.service;
 
-import java.util.*;
 import java.util.regex.*;
 
 import employeecrudmaven.dao.LoginDAO;
@@ -12,7 +11,9 @@ public class LoginServiceImpl implements LoginService {
 
 	public final String regexForUsername = "([a-zA-Z]{3,})*\\S";
 	public final String regexForPassword = "((?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[$&+,:;=?@#|'<>.-^*()%!]).{5,14})";
-	public final String regexForNoWhiteSpace = "\\S*";	public void insertLogin(LoginModel registrationModel) {
+	public final String regexForNoWhiteSpace = "\\S*";
+
+	public void insertLogin(LoginModel registrationModel) {
 		loginDAO.insertLogin(registrationModel);
 	}
 
@@ -35,16 +36,12 @@ public class LoginServiceImpl implements LoginService {
 
 	public boolean isPasswordNotExists(String username, String password) {
 		LoginModel loginModel = loginDAO.getUsername(username);
-		if (loginModel==null) {
+		if (loginModel == null) {
 			return false;
-		} else if(!loginModel.getPassword().equals(password)) {
+		} else if (!loginModel.getPassword().equals(password)) {
 			return false;
 		}
 		return true;
-	}
-
-	public int getIdForUserName(String username) {
-		return loginDAO.getIdForUserName(username);
 	}
 
 	public int getId(String username, String password) {

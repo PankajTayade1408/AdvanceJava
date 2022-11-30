@@ -5,14 +5,7 @@ public class LoginModel {
   private String password;
   private String confPassword;
   private int id;
-public LoginModel(String username, String password, String confPassword,int id) {
-	super();
-	this.username = username;
-	this.password = password;
-	this.confPassword = confPassword;
-	this.id=id;
-}
-
+  
 public LoginModel(String username, String password) {
 	super();
 	this.username = username;
@@ -24,9 +17,6 @@ public LoginModel(String username, String password, int id) {
 	this.username = username;
 	this.password = password;
 	this.id = id;
-}
-
-public LoginModel() {
 }
 
 public int getId() {

@@ -66,14 +66,20 @@
 select {
 	margin-left: 60px;
 }
+#picture
+{
+color:red;
+font-size:15px;
+margin-left:170px;
+}
 </style>
 </head>
 <body>
 	<c:if test="${employee==null || idForEdit==null}">
-		<form action="<%=request.getContextPath()%>/insert" method="post">
+		<form action="<%=request.getContextPath()%>/insert" method="post"  enctype="multipart/form-data">
 	</c:if>
 	<c:if test="${employee!=null && idForEdit>0}">
-		<form action="<%=request.getContextPath()%>/update" method="post">
+		<form action="<%=request.getContextPath()%>/update" method="post" enctype="multipart/form-data">
 	</c:if>
 	<div class="Form">
 		<input type="hidden" name="id" value="${employee.getId()}">
@@ -155,7 +161,13 @@ select {
 		<c:out value="${dateOfJoining}">
 		</c:out>
 	</div>
-	<br />
+	<br/> Upload Profile Picture
+	<span style="color: red; font-weight: bold">*</span> :
+	<input type="file" name="file" value="${employee.getPicture()}"/>
+	<div id="picture">
+	<c:out value="${picture}"></c:out>
+	</div>
+	<br /><br/>
 	<input type="submit" name="submit" value="Submit" id="submit" required />
 	<input type="reset" name="reset" value="Reset" id="reset" required />
 	&nbsp;&nbsp;&nbsp;&nbsp;

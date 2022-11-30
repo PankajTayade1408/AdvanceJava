@@ -1,5 +1,6 @@
 package employeecrudmaven.service;
 
+import java.io.FileInputStream;
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -9,13 +10,13 @@ import employeecrudmaven.model.EmployeeModel;
 public interface EmployeeService {
 
 	// Methods For Employee1 Table
-	public void insertEmployee(EmployeeModel employee);
+	public void insertEmployee(EmployeeModel employee,FileInputStream fileInputStream);
 
 	public EmployeeModel getEmployeeById(int id);
 
 	public List<EmployeeModel> getAllEmployee(int loginId);
 
-	public boolean updateEmployee(EmployeeModel employee) throws SQLException;
+	public boolean updateEmployee(EmployeeModel employee,FileInputStream fileInputStream) throws SQLException;
 
 	public boolean deleteEmployee(int id) throws Exception;
 

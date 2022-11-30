@@ -2,13 +2,15 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ page import="java.util.*,java.text.*,java.time.*"%>
+<%@ page
+	import="java.util.*,java.text.*,java.time.*,employeecrudmaven.model.*"%>
 <!DOCTYPE html>
 <html>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
 <meta charset="ISO-8859-1">
+
 <title>Insert title here</title>
 <style>
 .Form {
@@ -66,14 +68,22 @@
 select {
 	margin-left: 60px;
 }
+
+#picture {
+	color: red;
+	font-size: 15px;
+	margin-left: 170px;
+}
 </style>
 </head>
 <body>
 	<c:if test="${employee==null || idForEdit==null}">
-		<form action="<%=request.getContextPath()%>/insert" method="post">
+		<form action="<%=request.getContextPath()%>/insert" method="post"
+			enctype="multipart/form-data">
 	</c:if>
 	<c:if test="${employee!=null && idForEdit>0}">
-		<form action="<%=request.getContextPath()%>/update" method="post">
+		<form action="<%=request.getContextPath()%>/update" method="post"
+			enctype="multipart/form-data">
 	</c:if>
 	<div class="Form">
 		<input type="hidden" name="id" value="${employee.getId()}">
@@ -115,7 +125,8 @@ select {
 	</div>
 	<br /> Employee Salary
 	<span style="color: red; font-weight: bold">*</span> :
-	<input type="text" name="empsalary" value="<fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${employee.getSalary()}"/>"/>
+	<input type="text" name="empsalary"
+		value="<fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${employee.getSalary()}"/>" />
 	<br />
 	<div id="salary">
 		<c:out value="${salary}">
@@ -155,6 +166,28 @@ select {
 		<c:out value="${dateOfJoining}">
 		</c:out>
 	</div>
+	<%!String picture = "";
+	byte[] image = null;%>
+	<%
+		if (image != null) {
+			image = ((EmployeeModel) pageContext.findAttribute("employee")).getProfilePicture();
+			System.out.println("Image is " + image);
+			
+		}
+	%>
+	<script>
+      
+    </script>
+	<br /> Upload Profile Picture
+	<span style="color: red; font-weight: bold">*</span> :
+	<input type="file" name="file" value="${employee.getfileName()}" id="ProfilePicture"/>
+	<c:if test="${picture!=null}">
+		<img src="${picture}" width="100px" height="100px" />
+	</c:if>
+	<div id="picture">
+		<c:out value="${Picture}"></c:out>
+	</div>
+	<br />
 	<br />
 	<input type="submit" name="submit" value="Submit" id="submit" required />
 	<input type="reset" name="reset" value="Reset" id="reset" required />

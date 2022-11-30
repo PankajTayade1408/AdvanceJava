@@ -1,23 +1,27 @@
 package employeecrudmaven.controller;
 
-import java.io.IOException;
+import java.io.*;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import employeecrudmaven.model.EmployeeModel;
 import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.service.EmployeeServiceImpl;
 
 @WebServlet("/list")
+@MultipartConfig
 public class EmployeeController extends HttpServlet {
 	EmployeeService employeeService = new EmployeeServiceImpl();
 
@@ -29,6 +33,7 @@ public class EmployeeController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getServletPath();
+
 		switch (action) {
 		case "/new":
 			showNewForm(request, response);
@@ -79,9 +84,7 @@ public class EmployeeController extends HttpServlet {
 		session.removeAttribute("idForEdit");
 		if (loginId != null) {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			request.setAttribute("loginId", loginId);
 			dispatcher.forward(request, response);
-			return;
 		} else {
 			response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven");
 		}
@@ -101,7 +104,9 @@ public class EmployeeController extends HttpServlet {
 		String employeeSalary = request.getParameter("empsalary");
 		String country = request.getParameter("country");
 		String dateOfJoining = request.getParameter("empdoj");
-
+		Part part = request.getPart("file");
+		FileInputStream fileInputStream = null;
+		String fileName = part.getSubmittedFileName();
 		String employeeSkills[] = new String[0];
 		String checkedSkills = "";
 		LinkedHashSet<String> skills = new LinkedHashSet<String>();
@@ -122,6 +127,13 @@ public class EmployeeController extends HttpServlet {
 				flag = false;
 			} else {
 				employee.setCountry(country);
+			}
+
+			if (fileName.isEmpty()) {
+				request.setAttribute("Picture", "Upload a Profile Picture");
+				flag = false;
+			} else {
+				fileInputStream = (FileInputStream) part.getInputStream();
 			}
 
 			if (dateOfJoining.isEmpty()) {
@@ -164,11 +176,11 @@ public class EmployeeController extends HttpServlet {
 			request.setAttribute("employee", employee);
 
 			if (flag) {
-				double salary = Float.parseFloat(request.getParameter("empsalary"));
+				double salary = Float.parseFloat(request.getParameter("empsalary").replaceAll(",", ""));
 				int age = Integer.parseInt(employeeAge);
 				EmployeeModel newEmployee = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining,
-						country, loginId);
-				employeeService.insertEmployee(newEmployee);
+						country, loginId, fileName);
+				employeeService.insertEmployee(newEmployee, fileInputStream);
 				employeeService.insertEmployeeSkillsById(newEmployee.getId(), skills);
 				response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven/list");
 			} else {
@@ -191,20 +203,24 @@ public class EmployeeController extends HttpServlet {
 		}
 	}
 
-	private void showEditForm(HttpServletRequest request, HttpServletResponse response) {
+	private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
 		int idForEdit = Integer.parseInt(request.getParameter("id"));
-		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
-		response.setDateHeader("Expire", 0);
 		EmployeeModel employee;
 		try {
 			HttpSession session = request.getSession();
 			session.setAttribute("idForEdit", idForEdit);
 			Integer loginId = (Integer) session.getAttribute("id");
-			if (session != null && loginId != null) {
+			if (loginId != null) {
 				employee = employeeService.getEmployeeById(idForEdit);
+				byte[] image = employee.getProfilePicture();
+				String encodedString = Base64.getEncoder().encodeToString(image);
+				String picture = "data:image/jpg;base64," + encodedString;
+				session.setAttribute("editFileName", employee.getfileName());
+				request.setAttribute("picture", picture);
+				request.setAttribute("employee", employee);
 				RequestDispatcher dispatcher = request
 						.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
-				request.setAttribute("employee", employee);
 				dispatcher.forward(request, response);
 			} else {
 				response.sendRedirect("http://localhost:8080/");
@@ -227,6 +243,11 @@ public class EmployeeController extends HttpServlet {
 			String employeeSalary = request.getParameter("empsalary");
 			String dateOfJoining = request.getParameter("empdoj");
 			String country = request.getParameter("country");
+			String fileFromEdit = (String) session.getAttribute("editFileName");
+			Part part = request.getPart("file");
+			FileInputStream fileInputStream = null;
+			String file = part.getSubmittedFileName();
+			String path = "D:\\Pankaj\\Images\\" + fileFromEdit;
 			request.setAttribute("idForEdit", id);
 			EmployeeModel employee = new EmployeeModel();
 			boolean flag = true;
@@ -245,6 +266,13 @@ public class EmployeeController extends HttpServlet {
 						skills.add(checkedSkills);
 					}
 					employee.setSkills(skills);
+				}
+
+				if (file.isEmpty()) {
+					fileInputStream = new FileInputStream(path);
+					file = fileFromEdit;
+				} else {
+					fileInputStream = (FileInputStream) part.getInputStream();
 				}
 
 				if (country == null) {
@@ -296,8 +324,8 @@ public class EmployeeController extends HttpServlet {
 					double salary = Float.parseFloat(request.getParameter("empsalary").replaceAll(",", ""));
 					int age = Integer.parseInt(employeeAge);
 					EmployeeModel employeeforUpdate = new EmployeeModel(id, firstName, lastName, skills, age, salary,
-							dateOfJoining, country);
-					employeeService.updateEmployee(employeeforUpdate);
+							dateOfJoining, country, file);
+					employeeService.updateEmployee(employeeforUpdate, fileInputStream);
 					EmployeeModel empskills = new EmployeeModel(id, skills);
 					employeeService.updateEmployeeSkills(empskills);
 					response.sendRedirect(request.getContextPath() + "/list");
@@ -323,6 +351,8 @@ public class EmployeeController extends HttpServlet {
 				String username = (String) session.getAttribute("usernameLogin");
 				request.setAttribute("empList", employeeList);
 				request.setAttribute("username", username);
+				session.removeAttribute("editFileName");
+				session.removeAttribute("picture");
 				RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//index.jsp");
 				dispatcher.forward(request, response);
 			} else {

@@ -14,8 +14,6 @@ public interface LoginService {
 
 	public boolean isUsernameNotExists(String username);
 
-	public int getIdForUserName(String username);
-
 	public LoginModel getUsername(String usenameLogin);
 
 	public boolean isPasswordNotExists(String usernameLogin, String passwordLogin);

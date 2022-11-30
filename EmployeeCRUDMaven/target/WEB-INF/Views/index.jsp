@@ -8,7 +8,7 @@
 	<style>
 	#logoutsection
 	{
-	 position:absolute;
+	 	position:absolute;
 		right:20;
 		top:10;
 		font-size:20px; 
@@ -42,6 +42,7 @@
 			<th>Salary</th>
 			<th>Country</th>
 			<th>Date of Joining</th>
+			<th>Profile Picture</th>
 			<th>Update</th>
 			<th>Delete</th>
 		</tr>
@@ -63,6 +64,7 @@
 				<td><center><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${e.getSalary()}"/></center></td>
 				<td><center>${e.getCountry()}</center></td>
 				<td><center>${e.getDoj()}</center></td>
+				<td><center> <img src="${e.getPicture()}" width="100px" height="100px"/></center></td>
 				<td><center><a
 					 href="<%=request.getContextPath()%>/edit?id=${e.getId()}">Edit</a></center></td>
 				<td><center><a

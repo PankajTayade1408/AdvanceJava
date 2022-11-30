@@ -6,6 +6,7 @@
 <head>
 </head>
 <body>
+
 <style>
 		 .registrationbody {
         margin-left: 500px;
@@ -67,7 +68,9 @@
      margin-left:140px;
      }
     </style>
+    
     <div class="registrationbody">
+    
     	<h1><center>Sign Up Employee</center></h1>
 		 <form action="<%=request.getContextPath()%>/signup" method="post"> 
 		<input type="hidden" name="Id" > 
@@ -78,6 +81,7 @@
   		</c:out>
   		</div>	
         <br/>
+       
        <div id="Password"> Password :-
         <input type="password" name="passwordForSignIn" value="${password}" /><br /><br /><br /></div>
        <div id="passwordMessege"><c:out value="${messegeForPassword}"></c:out></div><br/>
@@ -85,6 +89,7 @@
         <input type="password" name="confirmpasswordForSignIn" value="${confirmPassword}"  /><br />
         <div id="confirmPasswordMessege"><c:out value="${messegeForConfirmPassword}"></c:out></div>
    	  	<div id="login">
+       	
        	<input type="submit" id="submitForm" value="Sign up"/>
    	  	<p>Already Registered?<a href="<%=request.getContextPath()%>/"> Log in</a></button></p>
         </div>

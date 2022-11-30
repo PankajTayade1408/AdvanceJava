@@ -1,125 +1,172 @@
 package employeecrudmaven.model;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 public class EmployeeModel {
-   private int id;
-   public String firstName;
-   private String lastName;
-   private LinkedHashSet<String>skills=new LinkedHashSet<String>();
-   private int age;
-   private double salary;
-   private  String dateOfJoining;
-   private String country;
-   private int loginId;
+	private int id;
+	public String firstName;
+	private String lastName;
+	private LinkedHashSet<String> skills = new LinkedHashSet<String>();
+	private int age;
+	private double salary;
+	private String dateOfJoining;
+	private String country;
+	private int loginId;
+	private byte[] profilePicture;
+	private String fileName;
 
-   public EmployeeModel(int id, LinkedHashSet<String> skills) {
-	super();
-	this.id = id;                                  
-	this.skills = skills;
-}
+	public String getfileName() {
+		return fileName;
+	}
 
-public EmployeeModel(int id, String firstName, String lastName, LinkedHashSet<String> skills, int age, double salary,
-		String dateOfJoining,String country) {
-	super();
-	this.id = id;
-	this.firstName = firstName;
-	this.lastName = lastName;
-	this.skills = skills;
-	this.age = age;
-	this.salary = salary;
-	this.dateOfJoining = dateOfJoining;
-	this.country=country;
-}
+	public void setfileName(String fileName) {
+		this.fileName = fileName;
+	}
 
-public EmployeeModel(String firstName, String lastName, LinkedHashSet<String> skills, int age, double salary,
-		String dateOfJoining, String country, int loginId) {
-	super();
-	this.firstName = firstName;
-	this.lastName = lastName;
-	this.skills = skills;
-	this.age = age;
-	this.salary = salary;
-	this.dateOfJoining = dateOfJoining;
-	this.country = country;
-	this.loginId = loginId;
-}
+	public void setProfilePicture(byte[] profilePicture) {
+		this.profilePicture = profilePicture;
+	}
 
-public EmployeeModel() {
-}
+	public byte[] getProfilePicture() {
+		return profilePicture;
+	}
 
-public int getLoginId() {
-	return loginId;
-}
+	public EmployeeModel(int id, LinkedHashSet<String> skills) {
+		super();
+		this.id = id;
+		this.skills = skills;
+	}
 
-public void setLoginId(int loginId) {
-	this.loginId = loginId;
-}
+	public EmployeeModel(int id, String firstName, String lastName, LinkedHashSet<String> skills, int age,
+			double salary, String dateOfJoining, String country, byte[] profilePicture, String fileName) {
+		super();
+		this.id = id;
+		this.firstName = firstName;			// Constructor for getEmployeeById() of EmployeeDAOImpl class
+		this.lastName = lastName;
+		this.skills = skills;
+		this.age = age;
+		this.salary = salary;
+		this.dateOfJoining = dateOfJoining;
+		this.country = country;
+		this.profilePicture = profilePicture;
+		this.fileName = fileName;
+	}
 
-public int getId() {
-	return id;
-}
-public void setId(int id) {
-	this.id = id;
-}
+	public EmployeeModel(int id, String firstName, String lastName, LinkedHashSet<String> skills, int age,
+			double salary, String dateOfJoining, String country, byte[] profilePicture) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;	    // Constructor for getAllEmployee() of EmployeeDAOImpl class
+		this.skills = skills;
+		this.age = age;
+		this.salary = salary;
+		this.dateOfJoining = dateOfJoining;
+		this.country = country;
+		this.profilePicture = profilePicture;
+	}
 
-public String getFirstname() {
-	return firstName;
-}
+	public EmployeeModel(String firstName, String lastName, LinkedHashSet<String> skills, int age, double salary,
+			String dateOfJoining, String country, int loginId, String fileName) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.skills = skills;
+		this.age = age;
+		this.salary = salary;					//Constructor for insertNewEmployee() of Controller Class
+		this.dateOfJoining = dateOfJoining;
+		this.country = country;
+		this.loginId = loginId;
+		this.fileName = fileName;
+	}
 
-public void setFirstName(String firstName) {
-	this.firstName = firstName;
-}
+	public EmployeeModel(int id, String firstName, String lastName, LinkedHashSet<String> skills, int age,
+			double salary, String dateOfJoining, String country, String fileName) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.skills = skills;
+		this.age = age;						//Constructor for updateEmployee() of Controller Class
+		this.salary = salary;
+		this.dateOfJoining = dateOfJoining;
+		this.country = country;
+		this.fileName = fileName;
+	}
 
-public String getLastname() {
-	return lastName;
-}
+	public EmployeeModel() {
+	}
 
-public void setLastName(String lastName) {
-	this.lastName = lastName;
-}
+	public int getLoginId() {
+		return loginId;
+	}
 
-public LinkedHashSet<String> getSkills() {
-	return skills;
-}
+	public void setLoginId(int loginId) {
+		this.loginId = loginId;
+	}
 
-public void setSkills(LinkedHashSet<String> skills) {
-	this.skills = skills;
-}
+	public int getId() {
+		return id;
+	}
 
-public int getAge() {
-	return age;
-}
+	public void setId(int id) {
+		this.id = id;
+	}
 
-public void setAge(int age) {
-	this.age = age;
-}
+	public String getFirstname() {
+		return firstName;
+	}
 
-public double getSalary() {
-	return salary;
-}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-public void setSalary(double salary) {
-	this.salary = salary;
-}
+	public String getLastname() {
+		return lastName;
+	}
 
-public String getDoj() {
-	return dateOfJoining;
-}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-public void setDateOfJoining(String dateOfJoining) {
-	this.dateOfJoining = dateOfJoining;
-}
+	public LinkedHashSet<String> getSkills() {
+		return skills;
+	}
 
-public String getCountry() {
-	return country;
-}
+	public void setSkills(LinkedHashSet<String> skills) {
+		this.skills = skills;
+	}
 
-public void setCountry(String country) {
-	this.country = country;
-}
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public double getSalary() {
+		return salary;
+	}
+
+	public void setSalary(double salary) {
+		this.salary = salary;
+	}
+
+	public String getDoj() {
+		return dateOfJoining;
+	}
+
+	public void setDateOfJoining(String dateOfJoining) {
+		this.dateOfJoining = dateOfJoining;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
 
 }
-   
-  
