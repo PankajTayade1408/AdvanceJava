@@ -8,17 +8,22 @@
 
 <%@ page import="java.util.*,java.text.*,java.time.*"%>
 
+
+<!DOCTYPE html>
+
 <html>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
 <meta charset="ISO-8859-1">
 
 <title>Insert title here</title>
+
 <style>
 .Form {
 	margin-left: 400px;
+	margin-top:50px;
 }
+<<<<<<< HEAD
+=======
 
 .nameMessege span {
 	display: inline;
@@ -55,10 +60,10 @@
 	font-size: 15px;
 }
 
+>>>>>>> 4946e0a6446a48c07ec16a121c46492e195926ff
 #submit {
 	margin-left: 150px;
 }
-
 #reset {
 	margin-left: 30px;
 }
@@ -79,7 +84,53 @@ select {
 }
 </style>
 </head>
+
 <body>
+<<<<<<< HEAD
+<c:out value="${messege}">
+</c:out>
+	<c:if test="${employee.getId()==0 || employee==null}">
+		<form action="<%=request.getContextPath() %>/insert" method="post">
+	</c:if>
+  	<c:if test="${employee.getId()!=0  &&  employee!=null}"> 
+		<form action="<%=request.getContextPath() %>/update" method="post">
+ 	</c:if> 
+	<div class="Form">
+		<input type="hidden" name="empId" value="${employee.getId()}">
+		 
+		 Enter the Employee Name : <input type="text" name="empfname"placeholder="Enter the First Name" value="${employee.getFirstname()}" required /> 
+		
+		<input type="text" name="emplname" placeholder="Enter the Last Name" value="${employee.getLastname()}" required /><br /><br />
+		
+		 Enter the Employee Skills : <input type="checkbox"name="empSkills" value="C"	${ employee.getSkills().contains("C")  ?"checked":""}>C 
+		
+		<input	type="checkbox" name="empSkills" value="C++" ${employee.getSkills().contains("C++")  ?"checked":""}>C++
+		<input type="checkbox" name="empSkills" value="JAVA" ${employee.getSkills().contains("JAVA")?"checked":""}>JAVA 
+		<input type="checkbox" name="empSkills" value="PYTHON" ${employee.getSkills().contains("PYTHON")?"checked":""}>PYTHON
+		<input type="checkbox" name="empSkills" value="AWS" ${employee.getSkills().contains("AWS")?"checked":""}>AWS <br /><br /> 
+		
+		Enter the Employee Age : <input type="number" name="empage" value="${employee.getAge()}" pattern="[A-Za-z]" min="20" max="60" required /><br /><br /> 
+		
+		Enter the Employee Salary : <input type="number" name="empsalary" value="${employee.getSalary()}" min="20000" max="90000" required /><br /><br />  
+		
+		Enter the Employee's Date of Joining : <input type="date" name="empdoj" value="${employee.getDoj()}" max=<%=java.time.LocalDate.now()%> required /><br /><br />
+		
+		 <c:if test="${employee.getId()==0 || employee==null}">
+		Enter the E-mail : <input type="email" name="empemail" 	value="${employee.getEmail()}" max="254" required/>	<br /><br />
+		<form action="<%=request.getContextPath() %>/insert" method="post">
+		</c:if>
+		 
+		 <c:if test="${employee.getId()!=0 && employee!=null}">
+		Enter the E-mail : <input type="email" name="empemail" 	value="${employee.getEmail()}" max="254" required readonly/>	<br /><br />
+		 <form action="<%=request.getContextPath() %>/update" method="post">
+ 		</c:if> 
+		
+		<input type="submit" name="submit" value="Submit" id="submit" required />
+		
+		<input type="reset" name="reset" value="Reset" id="reset" required />  &nbsp;&nbsp;&nbsp;
+		
+		<a	href="<%=request.getContextPath()%>/"><button type="button">List</button></a>
+=======
 	<c:if test="${employee==null || idForEdit==null}">
 		<form action="<%=request.getContextPath()%>/insert" method="post"
 			enctype="multipart/form-data">
@@ -196,6 +247,7 @@ select {
 	<input type="reset" name="reset" value="Reset" id="reset" required />
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	<a href="<%=request.getContextPath()%>/list"><button type="button">List</button></a>
+>>>>>>> 4946e0a6446a48c07ec16a121c46492e195926ff
 	</div>
 	</form>
 </body>
