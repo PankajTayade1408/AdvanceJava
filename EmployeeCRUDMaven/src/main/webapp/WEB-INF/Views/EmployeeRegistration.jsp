@@ -9,8 +9,6 @@
 <%@ page import="java.util.*,java.text.*,java.time.*"%>
 
 
-<!DOCTYPE html>
-
 <html>
 <head>
 <meta charset="ISO-8859-1">
@@ -22,8 +20,8 @@
 	margin-left: 400px;
 	margin-top:50px;
 }
-<<<<<<< HEAD
-=======
+
+
 
 .nameMessege span {
 	display: inline;
@@ -60,7 +58,6 @@
 	font-size: 15px;
 }
 
->>>>>>> 4946e0a6446a48c07ec16a121c46492e195926ff
 #submit {
 	margin-left: 150px;
 }
@@ -72,7 +69,12 @@
 	color: red;
 	margin-left: 140px;
 }
-
+#email{
+	color: red;
+	margin-top:-20px;
+	font-size:16px;
+	margin-left: 123px;
+}
 select {
 	margin-left: 60px;
 }
@@ -86,51 +88,9 @@ select {
 </head>
 
 <body>
-<<<<<<< HEAD
-<c:out value="${messege}">
-</c:out>
-	<c:if test="${employee.getId()==0 || employee==null}">
-		<form action="<%=request.getContextPath() %>/insert" method="post">
-	</c:if>
-  	<c:if test="${employee.getId()!=0  &&  employee!=null}"> 
-		<form action="<%=request.getContextPath() %>/update" method="post">
- 	</c:if> 
-	<div class="Form">
-		<input type="hidden" name="empId" value="${employee.getId()}">
-		 
-		 Enter the Employee Name : <input type="text" name="empfname"placeholder="Enter the First Name" value="${employee.getFirstname()}" required /> 
-		
-		<input type="text" name="emplname" placeholder="Enter the Last Name" value="${employee.getLastname()}" required /><br /><br />
-		
-		 Enter the Employee Skills : <input type="checkbox"name="empSkills" value="C"	${ employee.getSkills().contains("C")  ?"checked":""}>C 
-		
-		<input	type="checkbox" name="empSkills" value="C++" ${employee.getSkills().contains("C++")  ?"checked":""}>C++
-		<input type="checkbox" name="empSkills" value="JAVA" ${employee.getSkills().contains("JAVA")?"checked":""}>JAVA 
-		<input type="checkbox" name="empSkills" value="PYTHON" ${employee.getSkills().contains("PYTHON")?"checked":""}>PYTHON
-		<input type="checkbox" name="empSkills" value="AWS" ${employee.getSkills().contains("AWS")?"checked":""}>AWS <br /><br /> 
-		
-		Enter the Employee Age : <input type="number" name="empage" value="${employee.getAge()}" pattern="[A-Za-z]" min="20" max="60" required /><br /><br /> 
-		
-		Enter the Employee Salary : <input type="number" name="empsalary" value="${employee.getSalary()}" min="20000" max="90000" required /><br /><br />  
-		
-		Enter the Employee's Date of Joining : <input type="date" name="empdoj" value="${employee.getDoj()}" max=<%=java.time.LocalDate.now()%> required /><br /><br />
-		
-		 <c:if test="${employee.getId()==0 || employee==null}">
-		Enter the E-mail : <input type="email" name="empemail" 	value="${employee.getEmail()}" max="254" required/>	<br /><br />
-		<form action="<%=request.getContextPath() %>/insert" method="post">
-		</c:if>
-		 
-		 <c:if test="${employee.getId()!=0 && employee!=null}">
-		Enter the E-mail : <input type="email" name="empemail" 	value="${employee.getEmail()}" max="254" required readonly/>	<br /><br />
-		 <form action="<%=request.getContextPath() %>/update" method="post">
- 		</c:if> 
-		
-		<input type="submit" name="submit" value="Submit" id="submit" required />
-		
-		<input type="reset" name="reset" value="Reset" id="reset" required />  &nbsp;&nbsp;&nbsp;
-		
-		<a	href="<%=request.getContextPath()%>/"><button type="button">List</button></a>
-=======
+
+
+
 	<c:if test="${employee==null || idForEdit==null}">
 		<form action="<%=request.getContextPath()%>/insert" method="post"
 			enctype="multipart/form-data">
@@ -219,6 +179,11 @@ select {
 	<div id="doj">
 		<c:out value="${dateOfJoining}">
 		</c:out>
+	</div></br>
+	Enter the E-mail : <input type="email" name="empemail" 	value="${employee.getEmail()}" />	<br /><br />
+	<div id="email">
+	<c:out value="${messegeForEmail}">
+	</c:out>
 	</div>
 	<%!String picture = "";
 	byte[] image = null;%>
@@ -229,9 +194,6 @@ select {
 			
 		}
 	%>
-	<script>
-      
-    </script>
 	<br /> Upload Profile Picture
 	<span style="color: red; font-weight: bold">*</span> :
 	<input type="file" name="file" value="${employee.getfileName()}" id="ProfilePicture"/>
@@ -247,7 +209,6 @@ select {
 	<input type="reset" name="reset" value="Reset" id="reset" required />
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	<a href="<%=request.getContextPath()%>/list"><button type="button">List</button></a>
->>>>>>> 4946e0a6446a48c07ec16a121c46492e195926ff
 	</div>
 	</form>
 </body>

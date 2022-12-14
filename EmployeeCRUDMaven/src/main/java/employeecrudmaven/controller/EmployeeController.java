@@ -2,6 +2,7 @@ package employeecrudmaven.controller;
 
 import java.io.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import employeecrudmaven.dao.EmployeeDAOImpl;
 import employeecrudmaven.model.EmployeeModel;
 import employeecrudmaven.service.EmployeeService;
 import employeecrudmaven.service.EmployeeServiceImpl;
@@ -78,10 +78,6 @@ public class EmployeeController extends HttpServlet {
 
 	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-<<<<<<< HEAD
-		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-		dispatcher.forward(request, response);
-=======
 		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
 		response.setDateHeader("Expire", 0);
 		HttpSession session = request.getSession();
@@ -93,20 +89,15 @@ public class EmployeeController extends HttpServlet {
 		} else {
 			response.sendRedirect("http://localhost:8080/EmployeeCRUDMaven");
 		}
->>>>>>> 4946e0a6446a48c07ec16a121c46492e195926ff
+
 	}
 
 	private void insertNewEmployee(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException, ClassNotFoundException, ServletException {
-<<<<<<< HEAD
-=======
-		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
-		response.setDateHeader("Expire", 0);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
 		HttpSession session = request.getSession();
 		Integer loginId = (Integer) session.getAttribute("id");
 		boolean flag = true;
->>>>>>> 4946e0a6446a48c07ec16a121c46492e195926ff
 		String firstName = request.getParameter("empfname");
 		String lastName = request.getParameter("emplname");
 		String employeeAge = request.getParameter("empage");
@@ -119,6 +110,7 @@ public class EmployeeController extends HttpServlet {
 		String employeeSkills[] = new String[0];
 		String checkedSkills = "";
 		LinkedHashSet<String> skills = new LinkedHashSet<String>();
+		String email = request.getParameter("empemail");
 		if (request.getParameterValues("empSkills") == null) {
 			skills.add("");
 		} else {
@@ -128,33 +120,24 @@ public class EmployeeController extends HttpServlet {
 				skills.add(checkedSkills);
 			}
 		}
-<<<<<<< HEAD
-		String age = request.getParameter("empage");
-		String salary = request.getParameter("empsalary");
-		String dateOfJoining = request.getParameter("empdoj");
-		String email = request.getParameter("empemail");
+
 		ArrayList<String> emailList = employeeService.getEmployeeEmail();
-		if (employeeService.validateEmail(email)) {
-			EmployeeModel employee = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining, email);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("//WEB-INF//Views//EmployeeRegistration.jsp");
-			String messege = "Email is already Present ... Please enter unique email...";
-			request.setAttribute("messege", messege);
-			request.setAttribute("employee", employee);
-			dispatcher.forward(request, response);
-		} else {
-			EmployeeModel employee = new EmployeeModel(firstName, lastName, age, salary, dateOfJoining, email);
-			employeeService.insertEmployee(employee);
-			employeeService.insertEmployeeSkillsById(employee.getId(), skills);
-			response.sendRedirect("empList");
-=======
 
 		EmployeeModel employee = new EmployeeModel();
 		if (firstName != null && lastName != null) {
+			
 			if (country == null) {
 				request.setAttribute("country", "Select the Country");
 				flag = false;
 			} else {
 				employee.setCountry(country);
+			}
+
+			if (employeeService.validateEmail(email)) {
+				request.setAttribute("messege", "Email is already Present ... Please enter unique email...");
+				flag = false;
+			} else {
+				employee.setEmail(email);
 			}
 
 			if (fileName.isEmpty()) {
@@ -192,6 +175,7 @@ public class EmployeeController extends HttpServlet {
 				int age = Integer.parseInt(employeeAge);
 				employee.setAge(age);
 			}
+			
 			if (!employeeService.regexValidationSalary(employeeSalary)) {
 				request.setAttribute("salary", "Enter the Valid Salary");
 				flag = false;
@@ -206,7 +190,7 @@ public class EmployeeController extends HttpServlet {
 			if (flag) {
 				double salary = Float.parseFloat(request.getParameter("empsalary").replaceAll(",", ""));
 				int age = Integer.parseInt(employeeAge);
-				EmployeeModel newEmployee = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining,
+				EmployeeModel newEmployee = new EmployeeModel(firstName, lastName, skills, age, salary, dateOfJoining,email,
 						country, loginId, fileName);
 				employeeService.insertEmployee(newEmployee, fileInputStream);
 				employeeService.insertEmployeeSkillsById(newEmployee.getId(), skills);
@@ -217,7 +201,6 @@ public class EmployeeController extends HttpServlet {
 		} else {
 			dispatcher.forward(request, response);
 			return;
->>>>>>> 4946e0a6446a48c07ec16a121c46492e195926ff
 		}
 	}
 
@@ -261,44 +244,25 @@ public class EmployeeController extends HttpServlet {
 
 	private void updateEmployee(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
-<<<<<<< HEAD
-		int id = Integer.parseInt(request.getParameter("empId"));
-		String firstName = request.getParameter("empfname");
-		String lastName = request.getParameter("emplname");
-		String employeeSkills[] = request.getParameterValues("empSkills");
-		String checkedEmployeeSkills = "";
-		LinkedHashSet<String> skills = new LinkedHashSet<String>();
-		for (int i = 0; i < employeeSkills.length; i++) {
-			checkedEmployeeSkills = employeeSkills[i];
-			skills.add(checkedEmployeeSkills);
-		}
-		String age = request.getParameter("empage");
-		String salary = request.getParameter("empsalary");
-		String dateOfJoining = request.getParameter("empdoj");
-		String email = request.getParameter("empemail");
-		EmployeeModel employee = new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining, email);
-		employeeService.updateEmployee(employee);
-		EmployeeModel empskills = new EmployeeModel(id, skills);
-		employeeService.updateEmployeeSkills(empskills);
-		response.sendRedirect("empList");
-=======
 		HttpSession session = request.getSession();
 		Integer loginId = (Integer) session.getAttribute("id");
 		if (session != null && loginId != null) {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			Integer id = (Integer) session.getAttribute("idForEdit");
+			int id = Integer.parseInt(request.getParameter("empId"));
 			String firstName = request.getParameter("empfname");
 			String lastName = request.getParameter("emplname");
-			String employeeAge = request.getParameter("empage");
-			String employeeSalary = request.getParameter("empsalary");
 			String dateOfJoining = request.getParameter("empdoj");
+			String email = request.getParameter("empemail");
 			String country = request.getParameter("country");
 			String fileFromEdit = (String) session.getAttribute("editFileName");
+			String employeeAge = request.getParameter("empage");
+			String employeeSalary = request.getParameter("empsalary");
 			Part part = request.getPart("file");
 			FileInputStream fileInputStream = null;
 			String file = part.getSubmittedFileName();
 			String path = "D:\\Pankaj\\Images\\" + fileFromEdit;
 			request.setAttribute("idForEdit", id);
+			Integer idForUpdate = (Integer) session.getAttribute("idForEdit");
 			EmployeeModel employee = new EmployeeModel();
 			boolean flag = true;
 
@@ -306,7 +270,14 @@ public class EmployeeController extends HttpServlet {
 				String employeeSkills[] = new String[0];
 				String checkedSkills = "";
 				LinkedHashSet<String> skills = new LinkedHashSet<String>();
-
+				
+				if (!employeeService.validateEmail(email)) {
+					String messege = "Enter the Valid Email Address...";
+					request.setAttribute("messegeForEmail", "Enter the Valid Email Address...");
+				}else {
+					employee.setEmail(email);
+				}
+				
 				if (request.getParameterValues("empSkills") == null) {
 					skills.add("");
 				} else {
@@ -388,7 +359,7 @@ public class EmployeeController extends HttpServlet {
 				return;
 			}
 		}
->>>>>>> 4946e0a6446a48c07ec16a121c46492e195926ff
+
 	}
 
 	private void listEmployee(HttpServletRequest request, HttpServletResponse response) {

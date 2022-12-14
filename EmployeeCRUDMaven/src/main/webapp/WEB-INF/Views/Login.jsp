@@ -80,11 +80,6 @@ color:red;
 				<div id="messegePassword">
 					<c:out value="${messegePassword}"></c:out>
 				</div>
-				<br />
-				<div id="forgetPassword">
-					<a href="<%=request.getContextPath()%>/forgetPassword">Forget
-						Password?</a>
-				</div>
 				<input type="submit" name="LogIn" id="loginbutton" value="Login" />
 				<div id="signin">
 					Don't have an Account?<a
