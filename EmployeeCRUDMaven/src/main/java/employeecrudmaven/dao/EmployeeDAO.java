@@ -16,7 +16,7 @@ public interface EmployeeDAO {
 
 	// Queries for Employee1 Table
 	public static final String INSERT = "INSERT INTO Employee1"
-			+ "(firstname,lastname,age,salary,doj,country,email,image,loginId,fileName)Values" + "(?,?,?,?,?,?,?,?,?,?)";
+			+ "(firstname,lastname,age,salary,doj,country,email,image,LoginId,fileName)Values" + "(?,?,?,?,?,?,?,?,?,?)";
 
 
 	public static final String SELECT_BY_ID = "select * from Employee1 where id=?";

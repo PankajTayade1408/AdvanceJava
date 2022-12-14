@@ -142,16 +142,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	}
 
-	@Override
-	public List<EmployeeModel> getAllEmployee() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public List<EmployeeModel> getAllEmployee(Integer loginId) {
 		// TODO Auto-generated method stub
-		return null;
+		return employeeDAO.getAllEmployee(loginId);
 	}
 
 

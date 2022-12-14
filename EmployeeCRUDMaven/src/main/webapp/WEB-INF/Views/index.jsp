@@ -79,14 +79,14 @@
 				<td><center>${e.getSkills()}</center></td>
 				<td><center>${e.getAge()}</center></td>
 				<td><center>${e.getSalary()}</center></td>
+				<td><center>${e.getCountry()}</center></td>
 				<td><center>${e.getDoj()}</center></td>
 				<td><center>${e.getEmail()}</center></td>
-				<td><a href="<%=request.getContextPath()%>/edit?id=${e.getId()}"><center>Edit</center></a></td>
-				<td><a	href="<%=request.getContextPath()%>/delete?id=${e.getId()}"><center>Delete</center></a></td>
 
 				<td><center>
 						<img src="<%=picture%>" width="100px" height="100px" />
 					</center></td>
+					
 				<td><center>
 						<a href="<%=request.getContextPath()%>/edit?id=${e.getId()}">Edit</a>
 					</center></td>

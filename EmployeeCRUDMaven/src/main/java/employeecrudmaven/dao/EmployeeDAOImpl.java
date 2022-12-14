@@ -88,7 +88,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 				byte[] profilePicture;
 				image = resultSet.getBlob(10);
 				profilePicture = image.getBytes(1, (int) image.length());
-				employee = new EmployeeModel(id, firstName, lastName, skills, age, salary, dateOfJoining, country,
+				employee = new EmployeeModel(id, firstName, lastName, skills, age, salary, country,dateOfJoining, 
 					email,	profilePicture, path);
 
 			}

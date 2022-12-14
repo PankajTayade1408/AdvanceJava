@@ -44,7 +44,7 @@ public interface EmployeeService {
 
 	public List<EmployeeModel> getAllEmployee(Integer loginId);
 
-	List<EmployeeModel> getAllEmployee();
+	
 
 	
 }

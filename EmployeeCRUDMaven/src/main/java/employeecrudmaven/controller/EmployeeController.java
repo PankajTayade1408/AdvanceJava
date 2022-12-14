@@ -2,7 +2,6 @@ package employeecrudmaven.controller;
 
 import java.io.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -121,7 +120,6 @@ public class EmployeeController extends HttpServlet {
 			}
 		}
 
-		ArrayList<String> emailList = employeeService.getEmployeeEmail();
 
 		EmployeeModel employee = new EmployeeModel();
 		if (firstName != null && lastName != null) {
@@ -248,7 +246,6 @@ public class EmployeeController extends HttpServlet {
 		Integer loginId = (Integer) session.getAttribute("id");
 		if (session != null && loginId != null) {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF\\Views\\EmployeeRegistration.jsp");
-			int id = Integer.parseInt(request.getParameter("empId"));
 			String firstName = request.getParameter("empfname");
 			String lastName = request.getParameter("emplname");
 			String dateOfJoining = request.getParameter("empdoj");
@@ -261,8 +258,8 @@ public class EmployeeController extends HttpServlet {
 			FileInputStream fileInputStream = null;
 			String file = part.getSubmittedFileName();
 			String path = "D:\\Pankaj\\Images\\" + fileFromEdit;
-			request.setAttribute("idForEdit", id);
 			Integer idForUpdate = (Integer) session.getAttribute("idForEdit");
+			request.setAttribute("idForEdit", idForUpdate);
 			EmployeeModel employee = new EmployeeModel();
 			boolean flag = true;
 
@@ -344,10 +341,10 @@ public class EmployeeController extends HttpServlet {
 				if (flag) {
 					double salary = Float.parseFloat(request.getParameter("empsalary").replaceAll(",", ""));
 					int age = Integer.parseInt(employeeAge);
-					EmployeeModel employeeforUpdate = new EmployeeModel(id, firstName, lastName, skills, age, salary,
+					EmployeeModel employeeforUpdate = new EmployeeModel(idForUpdate, firstName, lastName, skills, age, salary,
 							dateOfJoining, country, file);
 					employeeService.updateEmployee(employeeforUpdate, fileInputStream);
-					EmployeeModel empskills = new EmployeeModel(id, skills);
+					EmployeeModel empskills = new EmployeeModel(idForUpdate, skills);
 					employeeService.updateEmployeeSkills(empskills);
 					response.sendRedirect(request.getContextPath() + "/list");
 					return;

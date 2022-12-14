@@ -148,7 +148,7 @@ select {
 	</div>
 	<br />
 	<form>
-		<label>Country <span style="color: red; font-weight: bold">*</span>
+		<label>Select Country <span style="color: red; font-weight: bold">*</span>
 			:
 		</label> <select name="country">
 			<option value="none" selected disabled hidden>Select Country</option>
