@@ -3,7 +3,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="java.util.*,java.text.*,java.time.*"%>
 
+
 <!DOCTYPE html>
+
 <html>
 <head>
 <meta charset="ISO-8859-1">
