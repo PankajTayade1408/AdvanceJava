@@ -36,7 +36,7 @@ public interface EmployeeDAO {
 	public void insertEmployee(EmployeeModel employee);
 
 	public EmployeeModel getEmployeeById(int id);
-
+   
 	public List<EmployeeModel> getAllEmployee();
 
 	public boolean updateEmployee(EmployeeModel employee);
